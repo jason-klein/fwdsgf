@@ -3,5 +3,6 @@ robots.txt
 wp-config.php
 error/
 stats/
+ical/php-simple-html-dom-parser/
 wp-content/plugins/events-calendar-pro/
 wp-content/plugins/the-events-calendar-filterbar/
