@@ -14,6 +14,19 @@ function my_theme_enqueue_styles() {
 add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
 
 /*
+* Remove Jetpack Related Posts on Event Pages
+* Jetpack was showing relevant matches, but date was date added to calendar instead of date of event
+* https://theeventscalendar.com/support/forums/topic/how-to-disable-jetpack-related-posts-on-single-event-posts/
+*/
+function jetpackme_no_related_posts( $options ) {
+    if ( is_singular( 'tribe_events' ) ) {
+        $options['enabled'] = false;
+    }
+    return $options;
+}
+add_filter( 'jetpack_relatedposts_filter_options', 'jetpackme_no_related_posts' );
+
+/*
 * The Events Calendar Get Events for 1 Year from Today in iCal Export File
 * add coding to theme's functions.php
 * @version 3.12
