@@ -4,8 +4,8 @@ Contributors: ModernTribe, barry.hughes, bordoni, borkweb, brianjessee, brook-tr
 Tags: events, calendar, event, venue, organizer, dates, date, google maps, conference, workshop, concert, meeting, seminar, summit, class, modern tribe, tribe, widget, pro, filters, categories, sort, tags, taxonomy, find, search
 Donate link: http://m.tri.be/29
 Requires at least: 4.5
-Tested up to: 4.9.1
-Stable tag: 4.5.2
+Tested up to: 4.9.2
+Stable tag: 4.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -193,6 +193,17 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/18h9" target="_blank">The Events Calendar: iCal Importer</a>
 
 == Changelog ==
+
+= [4.5.3] 2017-12-23 =
+
+* Fix - Make sure Filter Bar's responsive breakpoint is the same as The Events Calendar's, and is filterable via the same `tribe_events_mobile_breakpoint` filter (thanks @myrunningresource for reporting the discrepancy!) [43094]
+* Fix - the category filter so it has the current archive's category selected on the initial load (props to @simonoetang-be for reporting this!) [94028]
+* Fix - Modified the behavior of filters (so they update to reflect any changes that were made) when live ajax is disabled (our thanks to Karly on the forums for flagging this) [97555]
+* Tweak - Address some layout issues with the "Featured Events" filter so the label text doesn't get cut off [91662]
+* Tweak - Tweaked the "Day" filter so it more consistently returns accurate results regardless of site options (props @trevellyan for originally reporting the issue) [92948] 
+* Tweak - Update labeling to avoid confusion on the default state for all the Filter Bar module [82424]
+* Tweak - Address some layout issues with the "Featured Events" filter so the label text doesn't get cut off [91662]
+* Tweak - Tweaked the "Day" filter so it more consistently returns accurate results regardless of site options (props @trevellyan for originally reporting the issue) [92948]
 
 = [4.5.2] 2017-12-18 =
 
