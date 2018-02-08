@@ -4,8 +4,8 @@ Contributors: ModernTribe, barry.hughes, bordoni, borkweb, brianjessee, brook-tr
 Tags: events, calendar, event, venue, organizer, dates, date, google maps, conference, workshop, concert, meeting, seminar, summit, class, modern tribe, tribe, widget, pro
 Donate link: http://m.tri.be/29
 Requires at least: 4.5
-Tested up to: 4.9.1
-Stable tag: 4.4.21
+Tested up to: 4.9.2
+Stable tag: 4.4.22
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -203,13 +203,24 @@ Our Premium Plugins:
 
 == Changelog ==
 
+= [4.4.22] 2018-01-23 =
+
+* Fix - Create instance variables until plugins are loaded, to allow translations on each variable [95026]
+* Fix - Add data attributes to the container created by the shortcode, to allow JS events to work and other attributes from main events page to be attached to the shortcode template [91855]
+* Fix - Restored ability to query Google and obtain the longitude and latitude of venues (our thanks to @themal and many others for flagging this problem) [97210]
+* Tweak - Distance filter now is displayed as soon as there's a value on the location field [91855]
+* Tweak - Trigger an event `map-created.tribe` when a map instance is created
+* Tweak - Add link to the API tab when the Google Maps API limit is reached [89761]
+* Tweak - Add routes with `tribe_events_rewrite_rules_custom` filter instead of `generate_rewrite_rules` [95026]
+* Tweak - Improved validation of the "Week Day Format" option in the Display settings so that blank values are no longer accepted [94725]
+
 = [4.4.21] 2018-01-10 =
 
 * Fix - Modified the plugin's logic of hiding subsequent recurring events to avoid SQL errors under some conditions (props @garrettjohnson) [96769]
 * Tweak - Made the caching of Map View's geofence data more consistent in terms of when it invalidates; this should improve performance (props to many users reporting details of this issue in the forums!) [93177]
 * Tweak - Altered means of displaying the date within the countdown widget's settings to remove the potential for uncaught exceptions (our thanks to Otto for highlighting this problem) [96368]
 * Tweak - Added filter `tribe_geoloc_pre_get_min_max_coords` to let plugins override the min/max coords logic to avoid hitting MySQL [93520]
-* Tweak - Ensure Geo_Loc::get_min_max_coords always returns an array, to prevent potential JS errors for properties that are not defined or a variable that is not an object [93520]
+* Tweak - Ensure `Geo_Loc::get_min_max_coords` always returns an array, to prevent potential JS errors for properties that are not defined or a variable that is not an object [93520]
 
 = [4.4.20.1] 2017-12-20 =
 
