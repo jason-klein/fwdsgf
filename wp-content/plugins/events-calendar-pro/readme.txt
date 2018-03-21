@@ -5,7 +5,7 @@ Tags: events, calendar, event, venue, organizer, dates, date, google maps, confe
 Donate link: http://m.tri.be/29
 Requires at least: 4.5
 Tested up to: 4.9.4
-Stable tag: 4.4.24
+Stable tag: 4.4.24.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -202,6 +202,14 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/fa" target="_blank">The Events Calendar: Filter Bar</a>
 
 == Changelog ==
+
+= [4.4.24.2] 2018-03-13 =
+
+- Fix - Reverted Geolocalization changes made on Version `4.4.24`, will revisit the issue in future release (our thanks to Katherine, Ben Winton and others for flagging this) [101266]
+
+= [4.4.24.1] 2018-03-09 =
+
+- Fix - Prevent fatals and 500 errors from happening because of `undefined function tribe_get_global_query_object()` due to mismatch of the required The Events Calendar versions
 
 = [4.4.24] 2018-03-08 =
 
