@@ -1,4 +1,9 @@
 
+RedirectMatch 301 /cat/annual /events/list/?tribe_event_display=list&tribe_eventcategory=10
+RedirectMatch 301 /cat/(.*) /events/list/?tribe_event_display=list&tribe_eventcategory=$1
+RedirectMatch 301 /get/(.*) /events/list/?tribe_event_display=list&tribe-bar-search=$1
+RedirectMatch 301 /org/(.*) /events/list/?tribe_event_display=list&tribe_organizers=$1
+
 # BEGIN WordPress
 <IfModule mod_rewrite.c>
 RewriteEngine On
