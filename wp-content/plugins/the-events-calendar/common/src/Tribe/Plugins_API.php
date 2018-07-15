@@ -34,7 +34,7 @@ class Tribe__Plugins_API {
 				'title' => __( 'Event Aggregator', 'tribe-common' ),
 				'slug' => 'event-aggregator',
 				'link' => 'https://theeventscalendar.com/product/event-aggregator/?utm_campaign=in-app&utm_source=addonspage&utm_medium=event-aggregator&utm_content=appstoreembedded-1',
-				'description' => __( 'Import events from across the web! Event Aggregator makes it easy to run scheduled or manual imports from Facebook, Meetup, Google Calendar, and iCalendar, along with uploads from CSV and ICS files. You can also import directly from other sites running The Events Calendar thanks to our built-in REST API support.', 'tribe-common' ),
+				'description' => __( 'Import events from across the web! Event Aggregator makes it easy to run scheduled or manual imports from Facebook, Meetup, Eventbrite, Google Calendar, and iCalendar, along with uploads from CSV and ICS files. You can also import directly from other sites running The Events Calendar thanks to our built-in REST API support.', 'tribe-common' ),
 				'image' => 'images/app-shop-ical.jpg',
 				'is_installed' => class_exists( 'Tribe__Events__Aggregator' ) && Tribe__Events__Aggregator::is_service_active(),
 				'active_installs' => 20000,
@@ -68,7 +68,7 @@ class Tribe__Plugins_API {
 				'link' => 'https://theeventscalendar.com/product/wordpress-event-tickets-plus/?utm_campaign=in-app&utm_source=addonspage&utm_medium=wordpress-event-tickets-plus&utm_content=appstoreembedded-1',
 				'buy-now' => 'http://m.tri.be/19o5',
 				'description' => sprintf(
-					__( 'Event Tickets Plus allows you to sell tickets to your events using WooCommerce, Shopp, WP eCommerce, or Easy Digital Downloads. Use it on your posts and pages, or add %1$sThe Events Calendar%2$s and sell tickets from your events listings.', 'tribe-common' ),
+					__( 'Event Tickets Plus allows you to sell tickets to your events using WooCommerce, Easy Digital Downloads, or our built in Tribe Commerce tool. Add tickets to your posts and pages, or add %1$sThe Events Calendar%2$s and sell tickets from your event listings. Create custom registration forms, manage attendees, use custom capacity options, and more. Tickets have QR codes for easy check in at the door.', 'tribe-common' ),
 					'<a href="http://m.tri.be/18vc">',
 					'</a>'
 				),
