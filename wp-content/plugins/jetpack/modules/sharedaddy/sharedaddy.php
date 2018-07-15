@@ -143,7 +143,7 @@ function sharing_add_meta_box() {
 	$title = apply_filters( 'sharing_meta_box_title', __( 'Sharing', 'jetpack' ) );
 	if ( $post->ID !== get_option( 'page_for_posts' ) ) {
 		foreach( $post_types as $post_type ) {
-			add_meta_box( 'sharing_meta', $title, 'sharing_meta_box_content', $post_type, 'advanced', 'high' );
+			add_meta_box( 'sharing_meta', $title, 'sharing_meta_box_content', $post_type, 'side', 'default' );
 		}
 	}
 }
@@ -222,7 +222,7 @@ function sharing_plugin_settings( $links ) {
 function sharing_add_plugin_settings($links, $file) {
 	if ( $file == basename( dirname( __FILE__ ) ).'/'.basename( __FILE__ ) ) {
 		$links[] = '<a href="options-general.php?page=sharing.php">' . __( 'Settings', 'jetpack' ) . '</a>';
-		$links[] = '<a href="http://support.wordpress.com/sharing/" target="_blank">' . __( 'Support', 'jetpack' ) . '</a>';
+		$links[] = '<a href="http://support.wordpress.com/sharing/" rel="noopener noreferrer" target="_blank">' . __( 'Support', 'jetpack' ) . '</a>';
 	}
 
 	return $links;

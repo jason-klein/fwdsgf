@@ -83,12 +83,12 @@ function jetpack_get_module_i18n( $key ) {
 			'lazy-images' => array(
 				'name' => _x( 'Lazy Images', 'Module Name', 'jetpack' ),
 				'description' => _x( 'Lazy load images', 'Module Description', 'jetpack' ),
+				'recommended description' => _x( 'Lazy-loading images improve your site\'s speed and create a smoother viewing experience. Images will load as visitors scroll down the screen, instead of all at once.', 'Jumpstart Description', 'jetpack' ),
 			),
 
 			'likes' => array(
 				'name' => _x( 'Likes', 'Module Name', 'jetpack' ),
 				'description' => _x( 'Give visitors an easy way to show they appreciate your content.', 'Module Description', 'jetpack' ),
-				'recommended description' => _x( 'Give visitors an easy way to show they appreciate your content.', 'Jumpstart Description', 'jetpack' ),
 			),
 
 			'manage' => array(
