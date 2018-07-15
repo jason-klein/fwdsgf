@@ -4,8 +4,8 @@ Contributors: ModernTribe, barry.hughes, bordoni, borkweb, brianjessee, brook-tr
 Tags: events, calendar, event, venue, organizer, dates, date, google maps, conference, workshop, concert, meeting, seminar, summit, class, modern tribe, tribe, widget, pro, filters, categories, sort, tags, taxonomy, find, search
 Donate link: http://m.tri.be/29
 Requires at least: 4.5
-Tested up to: 4.9.4
-Stable tag: 4.5.4
+Tested up to: 4.9.6
+Stable tag: 4.5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -193,6 +193,14 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/18h9" target="_blank">The Events Calendar: iCal Importer</a>
 
 == Changelog ==
+
+= [4.5.6] 2018-05-29 =
+
+* Tweak - Added missing license.txt file [104893]
+
+= [4.5.5] 2018-04-18 =
+
+* Fix - Fixed an issue where cost ranges with numbers in decimal format would sometimes break filter URLs [75177]
 
 = [4.5.4] 2018-03-08 =
 
