@@ -1,12 +1,13 @@
 === Advanced Post Manager ===
 
-Contributors: ModernTribe, aguseo, barry.hughes, bordoni, borkweb, brianjessee, brook-tribe, courane01, faction23, GeoffBel, geoffgraham, ggwicz, jazbek, jbrinley, leahkoerper, lucatume, mastromktg, mat-lipe, mdbitz, MZAWeb, neillmcshea, nicosantos, peterchester, reid.peifer, roblagatta, ryancurban, shelbelliott, shane.pearlman, tribecari, trishasalas, vicskf, zbtirrell
+Contributors: ModernTribe, aguseo, barry.hughes, bordoni, borkweb, brianjessee, courane01, faction23, GeoffBel, geoffgraham, ggwicz, jbrinley, leahkoerper, lucatume, neillmcshea, nicosantos, peterchester, reid.peifer, roblagatta, ryancurban, shane.pearlman, vicskf, zbtirrell, juanfra
 Donate link: http://m.tri.be/4o
 Tags: developer-tools, custom post, filter, column, metabox, taxonomy, wp-admin, admin, Post, post type, plugin, advanced, tribe
 Requires at least: 3.2
-Tested up to: 4.7
+Tested up to: 5.0.3
 License: GPL v2
-Stable tag: 4.4
+Stable tag: 4.5
+Requires PHP: 5.6
 
 Turbo charge your posts admin for any custom post type with sortable filters and columns, and auto-registration of metaboxes.
 
@@ -40,40 +41,38 @@ The plugin is produced by <a href="http://m.tri.be/2s">Modern Tribe Inc</a>.
 
 = Current Contributors =
 
+<a href="https://profiles.wordpress.org/aguseo">Andras Guseo</a>
 <a href="https://profiles.wordpress.org/barryhughes">Barry Hughes</a>
 <a href="https://profiles.wordpress.org/brianjessee">Brian Jessee</a>
-<a href="https://profiles.wordpress.org/brook-tribe">Brook Harding</a>
 <a href="https://profiles.wordpress.org/cliffpaulick">Clifford Paulick</a>
-<a href="https://profiles.wordpress.org/MZAWeb">Daniel Dvorkin</a>
 <a href="https://profiles.wordpress.org/geoffgraham">Geoff Graham</a>
 <a href="https://profiles.wordpress.org/ggwicz">George Gecewicz</a>
 <a href="https://profiles.wordpress.org/bordoni">Gustavo Bordoni</a>
-<a href="https://profiles.wordpress.org/jazbek">Jessica Yazbek</a>
-<a href="https://profiles.wordpress.org/joshlimecuda">Josh Mallard</a>
 <a href="https://profiles.wordpress.org/leahkoerper">Leah Koerper</a>
 <a href="https://profiles.wordpress.org/lucatume">Luca Tumedei</a>
 <a href="https://profiles.wordpress.org/borkweb">Matthew Batchelder</a>
 <a href="https://profiles.wordpress.org/neillmcshea">Neill McShea</a>
-<a href="https://profiles.wordpress.org/mastromktg">Nick Mastromattei</a>
 <a href="https://profiles.wordpress.org/nicosantos">Nico Santo</a>
 <a href="https://profiles.wordpress.org/peterchester">Peter Chester</a>
 <a href="https://profiles.wordpress.org/roblagatta">Rob La Gatta</a>
 <a href="https://profiles.wordpress.org/reid.peifer">Reid Peifer</a>
 <a href="https://profiles.wordpress.org/shane.pearlman">Shane Pearlman</a>
-<a href="https://profiles.wordpress.org/thatdudebutch">Wayne Stratton</a>
 <a href="https://profiles.wordpress.org/zbtirrell">Zachary Tirrell</a>
-<a href="https://profiles.wordpress.org/aguseo">Andras Guseo</a>
-<a href="https://profiles.wordpress.org/tribecari">Caroline Tucker</a>
 
 = Past Contributors =
 
+<a href="https://profiles.wordpress.org/brook-tribe">Brook Harding</a>
 <a href="https://profiles.wordpress.org/caseypatrickdriscoll">Casey Driscoll</a>
 <a href="https://profiles.wordpress.org/ckpicker">Casey Picker</a>
+<a href="https://profiles.wordpress.org/tribecari">Caroline Tucker</a>
 <a href="https://profiles.wordpress.org/dancameron">Dan Cameron</a>
+<a href="https://profiles.wordpress.org/MZAWeb">Daniel Dvorkin</a>
+<a href="https://profiles.wordpress.org/jazbek">Jessica Yazbek</a>
 <a href="https://profiles.wordpress.org/jkudish">Joachim Kudish</a>
 <a href="https://profiles.wordpress.org/jgadbois">John Gadbois</a>
 <a href="https://profiles.wordpress.org/jonahcoyote">Jonah West</a>
 <a href="https://profiles.wordpress.org/jbrinley">Jonathan Brinley</a>
+<a href="https://profiles.wordpress.org/joshlimecuda">Josh Mallard</a>
 <a href="https://profiles.wordpress.org/justinendler/">Justin Endler</a>
 <a href="https://profiles.wordpress.org/kellykathryn">Kelly Groves</a>
 <a href="https://profiles.wordpress.org/kelseydamas">Kelsey Damas</a>
@@ -82,10 +81,12 @@ The plugin is produced by <a href="http://m.tri.be/2s">Modern Tribe Inc</a>.
 <a href="https://profiles.wordpress.org/mattwiebe">Matt Wiebe</a>
 <a href="https://profiles.wordpress.org/mat-lipe">Mat Lipe</a>
 <a href="https://profiles.wordpress.org/nickciske">Nick Ciske</a>
+<a href="https://profiles.wordpress.org/mastromktg">Nick Mastromattei</a>
 <a href="https://profiles.wordpress.org/paulhughes01">Paul Hughes</a>
 <a href="https://profiles.wordpress.org/ryancurban">Ryan Urban</a>
 <a href="https://profiles.wordpress.org/faction23">Samuel Estok</a>
 <a href="https://profiles.wordpress.org/codearachnid">Timothy Wood</a>
+<a href="https://profiles.wordpress.org/thatdudebutch">Wayne Stratton</a>
 
 = Translations =
 
@@ -93,26 +94,24 @@ Many thanks to all our translators!  You can grab the latest translations or con
 
 == Add-Ons ==
 
-But wait: there's more! We've got a whole stable of plugins available to help you be awesome at what you do. Check out a full list of the products below, and over at the <a href="http://m.tri.be/2a" target="_blank">Modern Tribe website.</a>
+But wait: there's more! We've got a whole stable of plugins available to help you be awesome at what you do. Check out a full list of the products below, and over on [our website](http://m.tri.be/18wn).
 
 Our Free Plugins:
 
-* <a href="https://wordpress.org/plugins/the-events-calendar/" target="_blank">The Events Calendar</a>
-* <a href="http://m.tri.be/18vx" target="_blank">Event Tickets</a>
-* <a href="http://wordpress.org/plugins/blog-copier/?ref=tec-readme" target="_blank">Blog Copier</a>
-* <a href="http://wordpress.org/plugins/image-rotation-repair/?ref=tec-readme" target="_blank">Image Rotation Widget</a>
-* <a href="http://wordpress.org/plugins/widget-builder/?ref=tec-readme" target="_blank">Widget Builder</a>
+* [The Events Calendar](https://wordpress.org/plugins/the-events-calendar/)
+* [Event Tickets](https://wordpress.org/plugins/event-tickets/)
+* [GigPress](https://wordpress.org/plugins/gigpress/)
+* [Image Widget](https://wordpress.org/plugins/image-widget/)
 
-Our Premium Plugins:
+Our Premium Plugins and Services:
 
-* <a href="http://m.tri.be/2c" target="_blank">Events Calendar PRO</a>
-* <a href="http://m.tri.be/18vy" target="_blank">Event Tickets Plus</a>
-* <a href="http://m.tri.be/2e" target="_blank">The Events Calendar: Eventbrite Tickets</a>
-* <a href="http://m.tri.be/2g" target="_blank">The Events Calendar: Community Events</a>
-* <a href="http://m.tri.be/18vw" target="_blank">The Events Calendar: Community Tickets</a>
-* <a href="http://m.tri.be/2h" target="_blank">The Events Calendar: Facebook Events</a>
-* <a href="http://m.tri.be/18h9" target="_blank">The Events Calendar: iCal Importer</a>
-* <a href="http://m.tri.be/fa" target="_blank">The Events Calendar: Filter Bar</a>
+* [Events Calendar PRO](http://m.tri.be/18wi)
+* [Event Aggregator](http://m.tri.be/197u) (service)
+* [Event Tickets Plus](http://m.tri.be/18wk)
+* [Community Events](http://m.tri.be/2g)
+* [Community Tickets](http://m.tri.be/18wl)
+* [Filter Bar](http://m.tri.be/fa)
+* [Eventbrite Tickets](http://m.tri.be/2e)
 
 == Screenshots ==
 
@@ -120,6 +119,10 @@ Our Premium Plugins:
 2. Automatically registered metaboxes for data entry
 
 == Changelog ==
+
+= [4.5] 2019-02-14 =
+
+* Tweak - Change the required Version of PHP to 5.6
 
 = [4.4] 2017-01-09 =
 
