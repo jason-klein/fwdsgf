@@ -1,15 +1,16 @@
 <?php if (!defined('WPO_VERSION')) die('No direct access allowed'); ?>
 <div class="wpo_col wpo_half_width wpo_feature_cont">
-	<h2><?php _e("WP-Optimize free / premium comparison", 'wp-optimize');?></h2>
-	
-	<p>
-	
-		<?php $wp_optimize->wp_optimize_url('https://getwpo.com/faqs/', __('FAQs', 'wp-optimize')); ?> |
+	<header>
+		<h2><?php _e("WP-Optimize free / premium comparison", 'wp-optimize');?></h2>
 		
-		<?php $wp_optimize->wp_optimize_url('https://getwpo.com/ask-pre-sales-question/', __('Ask a pre-sales question', 'wp-optimize')); ?>
+		<p>
 		
-	</p>
-	
+			<?php $wp_optimize->wp_optimize_url('https://getwpo.com/faqs/', __('FAQs', 'wp-optimize')); ?> |
+			
+			<?php $wp_optimize->wp_optimize_url('https://getwpo.com/ask-pre-sales-question/', __('Ask a pre-sales question', 'wp-optimize')); ?>
+			
+		</p>
+	</header>
 	<table class="wpo_feat_table">
 		<tbody>
 		<tr>
@@ -31,9 +32,7 @@
 				<p><?php _e('Installed', 'wp-optimize');?></p>
 			</td>
 			<td>
-				<p>
-					<p><a href="<?php esc_attr_e(apply_filters('wpo_premium_buy_url', 'https://getwpo.com/buy/'));?>"><?php _e('Upgrade now', 'wp-optimize');?></a></p>
-				</p>
+				<p><a href="<?php esc_attr_e(apply_filters('wpo_premium_buy_url', 'https://getwpo.com/buy/'));?>"><?php _e('Upgrade now', 'wp-optimize');?></a></p>
 			</td>
 		</tr>
 		<tr>
@@ -181,6 +180,32 @@
 		</tr>
 		<tr>
 			<td>
+				<img src="<?php echo WPO_PLUGIN_URL.'/images/features/lazy-load.png';?>" alt="<?php esc_attr_e('Lazy Loading', 'wp-optimize');?>" class="wpo-premium-image">
+				<h4><?php _e('Lazy Loading', 'wp-optimize');?></h4>
+				<p><?php _e('Make your site run faster by only loading parts of a web-page when it is visible to the user', 'wp-optimize');?></p>
+			</td>
+			<td>
+				<p><span class="dashicons dashicons-no-alt" aria-label="<?php esc_attr_e('No', 'wp-optimize');?>"></span></p>
+			</td>
+			<td>
+				<p><span class="dashicons dashicons-yes" aria-label="<?php esc_attr_e('Yes', 'wp-optimize');?>"></span></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<img src="<?php echo WPO_PLUGIN_URL.'/images/features/optimization-preview.png';?>" alt="<?php esc_attr_e('Optimization Preview', 'wp-optimize');?>" class="wpo-premium-image">
+				<h4><?php _e('Optimization Preview', 'wp-optimize');?></h4>
+				<p><?php _e('Preview, select and remove data and records available for optimization from the database', 'wp-optimize');?></p>
+			</td>
+			<td>
+				<p><span class="dashicons dashicons-no-alt" aria-label="<?php esc_attr_e('No', 'wp-optimize');?>"></span></p>
+			</td>
+			<td>
+				<p><span class="dashicons dashicons-yes" aria-label="<?php esc_attr_e('Yes', 'wp-optimize');?>"></span></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
 				<img src="<?php echo WPO_PLUGIN_URL.'/images/features/logging-n-reporting.png';?>" alt="<?php esc_attr_e('Enhanced logging and reporting', 'wp-optimize');?>" class="wpo-premium-image">
 				<h4><?php _e('Enhanced logging and reporting', 'wp-optimize');?></h4>
 				<p><?php _e('Send log messages to three additional locations: Slack, Syslog and Simple History', 'wp-optimize');?></p>
@@ -224,31 +249,29 @@
 				<p><?php _e('Installed', 'wp-optimize');?></p>
 			</td>
 			<td>
-				<p>
-					<p><a href="<?php esc_attr_e(apply_filters('wpo_premium_buy_url', 'https://getwpo.com/buy/'));?>"><?php _e('Upgrade now', 'wp-optimize');?></a></p>
-				</p>
+				<p><a href="<?php esc_attr_e(apply_filters('wpo_premium_buy_url', 'https://getwpo.com/buy/'));?>"><?php _e('Upgrade now', 'wp-optimize');?></a></p>
 			</td>
 		</tr>
 		</tbody>
 	</table>
 </div>
-<div class="wpo_col  wpo_half_width wpo_plugin_family_cont">
-	<h2><?php _e("Our other plugins", 'wp-optimize');?></h2>
-	
-	<p>
-	
-		<?php $wp_optimize->wp_optimize_url('https://updraftplus.com/', 'UpdraftPlus'); ?> |
+<div class="wpo_col  wpo_half_width wpo_plugin_family_cont wpo-plugin-family__free">
+	<header>
+		<h2><?php _e("Our other plugins", 'wp-optimize');?></h2>
+		<p>
 		
-		<?php $wp_optimize->wp_optimize_url('https://updraftplus.com/updraftcentral/', 'UpdraftCentral'); ?> |
+			<?php $wp_optimize->wp_optimize_url('https://updraftplus.com/', 'UpdraftPlus'); ?> |
+			
+			<?php $wp_optimize->wp_optimize_url('https://updraftplus.com/updraftcentral/', 'UpdraftCentral'); ?> |
 
-		<?php $wp_optimize->wp_optimize_url('https://metaslider.com/', 'MetaSlider'); ?> |
+			<?php $wp_optimize->wp_optimize_url('https://metaslider.com/', 'MetaSlider'); ?> |
 
-		<?php $wp_optimize->wp_optimize_url('https://getkeyy.com/', 'Keyy'); ?>
-	
-	</p>
-
-	<div class="postbox">
-		<div class="inside">
+			<?php $wp_optimize->wp_optimize_url('https://getkeyy.com/', 'Keyy'); ?>
+		
+		</p>
+	</header>
+	<div class="wpo-plugin-family__plugins">
+		<div class="wpo-plugin-family__plugin">
 			<?php
 			$wp_optimize->wp_optimize_url('https://updraftplus.com/', null, '<img class="addons" alt="'.__("UpdraftPlus", 'wp-optimize').'" src="'. WPO_PLUGIN_URL.'images/features/updraftplus_logo.png' .'">');
 			$wp_optimize->wp_optimize_url('https://updraftplus.com/', null, '<h3>'.__('UpdraftPlus – the ultimate protection for your site, hard work and business', 'wp-optimize').'</h3>', 'class="other-plugin-title"');
@@ -270,9 +293,7 @@
 			</p>
 			<?php $wp_optimize->wp_optimize_url('https://updraftplus.com/', null, __('Try for free', 'wp-optimize')); ?>
 		</div>
-	</div>
-	<div class="postbox">
-		<div class="inside">
+		<div class="wpo-plugin-family__plugin">
 			<?php
 			$wp_optimize->wp_optimize_url('https://updraftplus.com/updraftcentral/', null, '<img class="addons" alt="'.__("UpdraftCentral Dashboard
 ", 'wp-optimize').'" src="'. WPO_PLUGIN_URL.'images/features/updraftcentral_logo.png' .'">');
@@ -289,9 +310,7 @@
 			</p>
 			<?php $wp_optimize->wp_optimize_url('https://updraftplus.com/updraftcentral/', null, __('Try for free', 'wp-optimize')); ?>
 		</div>
-	</div>
-	<div class="postbox">
-		<div class="inside">
+		<div class="wpo-plugin-family__plugin">
 			<?php
 			$wp_optimize->wp_optimize_url('https://www.metaslider.com/', null, '<img class="addons" alt="'.__("Meta Slider", 'wp-optimize').'" src="'. WPO_PLUGIN_URL.'images/features/metaslider_logo.png' .'">');
 			$wp_optimize->wp_optimize_url('https://www.metaslider.com/', null, '<h3>'.__('MetaSlider - hold visitors’ attention to increase conversion and profits.', 'wp-optimize').'</h3>', 'class="other-plugin-title"');
@@ -310,9 +329,7 @@
 			</p>
 			<?php $wp_optimize->wp_optimize_url('https://www.metaslider.com/', null, __('Try for free', 'wp-optimize')); ?>
 		</div>
-	</div>
-	<div class="postbox">
-		<div class="inside">
+		<div class="wpo-plugin-family__plugin">
 			<?php $wp_optimize->wp_optimize_url('https://getkeyy.com/', null, '<img class="addons" alt="'.__("Keyy Two Factor Authentication", 'wp-optimize').'" src="'. WPO_PLUGIN_URL.'images/features/keyy_logo.png' .'">');
 			$wp_optimize->wp_optimize_url('https://www.metaslider.com/', null, '<h3>'.__('Keyy – instant &amp; secure logins with a wave of your phone', 'wp-optimize').'</h3>', 'class="other-plugin-title"');
 			?>
@@ -327,5 +344,6 @@
 			</p>
 			<?php $wp_optimize->wp_optimize_url('https://getkeyy.com/', null, __('Try for free', 'wp-optimize')); ?>
 		</div>
-	</div>
+	</div><!-- END wpo-plugin-family__plugins -->
 </div>
+<div class="clear"></div>
