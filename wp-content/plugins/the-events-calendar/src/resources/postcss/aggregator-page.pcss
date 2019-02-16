@@ -41,18 +41,6 @@
 		}
 	}
 
-	.tribe-ea-facebook-login {
-		display: block;
-		clear:both;
-
-		iframe,
-		.tribe-ea-status {
-			display: block;
-			float: left;
-		}
-
-	}
-
 	.tribe-ea-help {
 		padding: 4px;
 		color: #0073aa;
@@ -427,7 +415,6 @@
 		margin-bottom: .25em;
 	}
 
-	.tribe-ea-facebook-button,
 	.tribe-ea-eventbrite-button {
 		margin-left: 2rem;
 		margin-top: 1rem;
@@ -571,6 +558,7 @@
 
 .tribe-default-settings {
 	display: none;
+	overflow: hidden;
 	padding-bottom: 1rem;
 	padding-top: 1rem;
 
@@ -774,5 +762,13 @@
 				color: #ccc;
 			}
 		}
+	}
+}
+
+.tribe-ea-field-wrapper-post_status {
+	min-width: 275px;
+
+	&.tribe-active {
+		float: left;
 	}
 }

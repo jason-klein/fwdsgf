@@ -103,7 +103,7 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 		 * Static asset packages required for month view functionality
 		 * @var array
 		 */
-		protected $asset_packages = array( 'ajax-calendar' );
+		protected $asset_packages = array();
 
 		/**
 		 * HTML cache holder
@@ -271,6 +271,8 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 		 */
 		protected function hooks() {
 			parent::hooks();
+
+			tribe_asset_enqueue( 'the-events-calendar' );
 
 			// Since we set is_post_type_archive to true on month view, this prevents 'Events' from being added to the page title
 			add_filter( 'post_type_archive_title', '__return_false', 10 );
@@ -567,6 +569,15 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 			$cached_events = $cache->$cache_getter( $cache_key, 'save_post' );
 
 			if ( $cached_events !== false ) {
+				/**
+				 * A simple utility to listen for when events have been successfully pulled from cache.
+				 *
+				 * @since 4.7.1
+				 *
+				 * @param array $cached_events The array of event data pulled from cache.
+				 */
+				do_action( 'tribe_events_set_month_view_events_from_cache', $cached_events );
+
 				$this->events_in_month = $cached_events;
 				return;
 			}
@@ -823,6 +834,22 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 		 * @return WP_Query
 		 */
 		private function get_daily_events( $date ) {
+			/**
+			 * Filters the WP_Query object that will be returned for daily events on a date.
+			 *
+			 * If the value returned from this filter is not `null` then the method will bail
+			 * and return the filter return value.
+			 *
+			 * @since 4.6.24
+			 *
+			 * @param WP_Query|null $daily_events The WP_Query object the template will loop on
+			 *                                    to print the daily events; initially `null`.
+			 * @param string        $date         The day date in `Y-m-d` format.
+			 */
+			$daily_events = apply_filters( 'tribe_events_month_daily_events', null, $date );
+			if ( null !== $daily_events ) {
+				return $daily_events;
+			}
 
 			$beginning_of_day           = $this->get_cutoff_details( $date, 'beginning' );
 			$beginning_of_day_timestamp = $this->get_cutoff_details( $date, 'beginning_timestamp' );
@@ -1208,9 +1235,7 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 
 				Tribe__Events__Main::instance()->displaying = 'month';
 
-				if ( ! $wp_query = tribe_get_global_query_object() ) {
-					return;
-				}
+				global $wp_query;
 
 				$wp_query = tribe_get_events( $this->args, true );
 

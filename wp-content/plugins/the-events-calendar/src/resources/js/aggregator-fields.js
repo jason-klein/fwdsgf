@@ -11,6 +11,8 @@ tribe_aggregator.fields = {
 		dropdown                : '.tribe-ea-dropdown',
 		origin_field            : '#tribe-ea-field-origin',
 		field_url_source        : '#tribe-ea-field-url_source',
+		eventbrite_url_source   : '#tribe-ea-field-eventbrite_source',
+		post_status             : '.tribe-ea-field-post_status',
 		import_type_field       : '.tribe-import-type',
 		media_button            : '.tribe-ea-media_button',
 		datepicker              : '.tribe-datepicker',
@@ -57,7 +59,43 @@ tribe_aggregator.fields = {
 		20000
 	],
 
-	progress: {}
+	progress: {},
+
+	// A "module" of sorts related to Eventbrite only imports.
+	eventbrite: {
+		refineControls: '.tribe-refine-filters.eventbrite, .tribe-refine-filters.eventbrite .tribe-refine',
+		refineControlsHideMap: {
+			'event': 'tr.tribe-refine-filters',
+			'organizer': ''
+		},
+		detect_type: function ( url ) {
+			if ( ! tribe_aggregator.source_origin_regexp.eventbrite ) {
+				return null;
+			}
+
+			var baseRegex = tribe_aggregator.source_origin_regexp.eventbrite;
+			var type_regexps = {
+				// E.g. https://www.eventbrite.fr/e/some-event
+				'event': baseRegex + 'e\/[A-z0-9_-]+',
+				// E.g. https://www.eventbrite.fr/o/some-organizer
+				'organizer': baseRegex + 'o\/[A-z0-9_-]+'
+			};
+			var type = undefined;
+
+			_.each( type_regexps, function ( regularExpression, key ) {
+				var exp = new RegExp( regularExpression, 'g' );
+				var match = exp.exec( url );
+
+				if ( null === match ) {
+					return;
+				}
+
+				type = key;
+			} );
+
+			return type;
+		}
+	}
 };
 
 ( function( $, _, obj, ea ) {
@@ -79,6 +117,14 @@ tribe_aggregator.fields = {
 
 		// Setup the preview container
 		obj.$.preview_container = $( obj.selector.preview_container );
+
+		// setup some variables we might reuse
+		obj.origin = $( '#tribe-ea-field-origin' );
+		obj.importType = $( '#tribe-ea-field-url_import_type' );
+		obj.urlImport = {
+			startDate: $( '#tribe-ea-field-url_start' ),
+			originalMinDate: $( '#tribe-ea-field-url_start' ).datepicker( 'option', 'minDate' ) || '',
+		};
 
 		// Setup each type of field
 		$.each( obj.construct, function( key, callback ){
@@ -109,13 +155,18 @@ tribe_aggregator.fields = {
 				var $this = $( this ),
 				    $frequency = $( this ).next( obj.selector.fields );
 
-				$frequency.select2( 'val', ( 'schedule' === $this.val() ? 'daily' : '' ) ).change();
+				var importType = $this.val();
+
+				$frequency.select2( 'val', ( 'schedule' === importType ? 'daily' : '' ) ).change();
 
 				// set a data attribute on the form indicating the schedule type
-				obj.$.form.attr( 'data-type', $this.val() );
+				obj.$.form.attr( 'data-type', importType );
+
+				obj.maybeLimitUrlStartDate()
 			} )
 			.on( 'change'     , obj.selector.origin_field              , function() {
-				obj.$.form.attr( 'data-origin', $( this ).val() );
+				var origin = $( this ).val();
+				obj.$.form.attr( 'data-origin', origin );
 				obj.reset_preview();
 
 				// reset all bumpdowns
@@ -129,8 +180,34 @@ tribe_aggregator.fields = {
 				// $( '.tribe-ea-tab-new .tribe-ea-form input' ).val( function() { return this.defaultValue; } ).change();
 
 				if ( 'redirect' === $( this ).val() ) {
-					window.open( 'https://theeventscalendar.com/wordpress-event-aggregator/?utm_source=importoptions&utm_medium=plugin-tec&utm_campaign=in-app','_blank' );
+					window.open( 'https://theeventscalendar.com/wordpress-event-aggregator/?utm_source=importoptions&utm_medium=plugin-tec&utm_campaign=in-app', '_blank' );
 					location.reload();
+				}
+
+				// A "reset" of the Post Status select2 selector when an origin is selected.
+				if ( '' !== origin ) {
+					$( obj.selector.post_status )
+						.val( ea.default_settings[ origin ][ 'post_status' ] )
+						.select2( 'val', ea.default_settings[ origin ][ 'post_status' ] )
+						.trigger( 'change' );
+				}
+
+				obj.maybeLimitUrlStartDate()
+			} )
+			.on( 'change', obj.selector.eventbrite_url_source, function ( e ) {
+				// Show all UI controls at first, even if we bail the user will have a full UI.
+				$( obj.eventbrite.refineControls ).show();
+
+				var type = obj.eventbrite.detect_type( $( '#tribe-ea-field-eventbrite_source' ).val() );
+
+				if ( ! type ) {
+					return;
+				}
+
+				// And then hide the ones that should be hidden for this import type if there are any.
+				var controlsToHide = obj.eventbrite.refineControlsHideMap[ type ];
+				if ( controlsToHide ) {
+					$( controlsToHide ).hide();
 				}
 			} )
 			.on( 'change', obj.selector.field_url_source, function( e ) {
@@ -733,7 +810,7 @@ tribe_aggregator.fields = {
 	obj.finalize_manual_import = function() {
 		var origin = $( '#tribe-ea-field-origin' ).val();
 		var $table = $( '.dataTable' );
-		var table = window.tribe_data_table;
+		var table  = window.tribe_data_table;
 
 		if ( $table.hasClass( 'display-checkboxes' ) ) {
 			var row_selection = table.rows( { selected: true } );
@@ -746,13 +823,11 @@ tribe_aggregator.fields = {
 				return;
 			}
 
-			var data = row_selection.data();
+			var data  = row_selection.data();
 			var items = [];
 			var unique_id_field = null;
 
-			if ( 'facebook' === origin ) {
-				unique_id_field = 'facebook_id';
-			} else if ( 'meetup' === origin ) {
+			if ( 'meetup' === origin ) {
 				unique_id_field = 'meetup_id';
 			} else if ( 'eventbrite' === origin ) {
 				unique_id_field = 'eventbrite_id';
@@ -1024,7 +1099,12 @@ tribe_aggregator.fields = {
 			}
 		}
 
-		if ( data.complete ) {
+		if ( data.error ) {
+			obj.progress.$.notice.find( '.tribe-message' ).html( data.error_text );
+			obj.progress.$.tracker.remove();
+			obj.progress.$.notice.find( '.progress-container' ).remove();
+			obj.progress.$.notice.removeClass( 'warning' ).addClass( 'error' );
+		} else if ( data.complete ) {
 			obj.progress.$.notice.find( '.tribe-message' ).html( data.complete_text );
 			obj.progress.$.tracker.remove();
 			obj.progress.$.notice.find( '.progress-container' ).remove();
@@ -1117,6 +1197,20 @@ tribe_aggregator.fields = {
 		}
 
 		jQuery( '#tribe-date-helper-date-' + origin ).html( selected_date );
+	};
+
+	obj.maybeLimitUrlStartDate = function() {
+		if( 'url' !== obj.origin.val() ){
+			return;
+		}
+
+		if( 'schedule' === obj.importType.val() ){
+			obj.urlImport.startDate.data( 'datepicker-min-date', 'today' );
+
+			return;
+		}
+
+		obj.urlImport.startDate.data( 'datepicker-min-date', null );
 	};
 
 	// Run Init on Document Ready

@@ -19,11 +19,20 @@
 	$( document ).ready( function() {
 
 		var $body        = $( 'body' );
-		var $navLink    = $( '[class^="tribe-events-nav-"] a' );
-		var initialDate = tf.get_url_param( 'tribe-bar-date' );
+		var $navLink     = $( '[class^="tribe-events-nav-"] a' );
+		var initialDate  = tf.get_url_param( 'tribe-bar-date' );
 		var $wrapper     = $( document.getElementById( 'tribe-events' ) );
 		var $tribedate   = $( document.getElementById( 'tribe-bar-date' ) );
-		var dateMod     = false;
+		var dateMod      = false;
+
+		if ( 1 > $wrapper.length ) {
+			return;
+		}
+
+		// Bail if we're on single event page
+		if ( $body.hasClass( 'single-tribe_events' ) ) {
+			return;
+		}
 
 		var baseUrl = '/';
 
@@ -74,6 +83,9 @@
 			minViewMode : 'months',
 			autoclose   : true
 		};
+
+		// Set up some specific strings for datepicker i18n.
+		tribe_ev.fn.ensure_datepicker_i18n();
 
 		$tribedate
 			.bootstrapDatepicker( td.datepicker_opts )
@@ -152,6 +164,11 @@
 		function tribe_mobile_setup_day( $date ) {
 
 			var data  = $date.data( 'tribejson' );
+
+			if ( 'undefined' === typeof $date.attr( 'data-day' ) ) {
+				return;
+			}
+
 			data.date = $date.attr( 'data-day' );
 
 			var $calendar  = $date.parents( '.tribe-events-calendar' );
@@ -181,11 +198,11 @@
 		function tribe_mobile_month_setup() {
 
 			var $activeDay       = $wrapper.find( '.mobile-active' );
-			var $mobileTrigger = $wrapper.find( '.mobile-trigger' );
-			var $tribeGrid     = $wrapper.find( document.getElementById( 'tribe-events-content' ) ).find( '.tribe-events-calendar'  );
+			var $mobileTrigger   = $wrapper.find( '.mobile-trigger' );
+			var $tribeGrid       = $wrapper.find( document.getElementById( 'tribe-events-content' ) ).find( '.tribe-events-calendar'  );
 
 			// If for some reason we don't have a "$activeDay" selected, default to today.
-			if ( !$activeDay.length ) {
+			if ( ! $activeDay.length ) {
 				var $activeDay = $wrapper.find( '.tribe-events-present' );
 			}
 
@@ -357,7 +374,8 @@
 				if ( ts.ajax_running ) {
 					return;
 				}
-				if ( $tribedate.val().length ) {
+
+				if ( $tribedate.length ) {
 					if ( '0' !== ts.datepicker_format ) {
 						ts.date = tribeDateFormat( $tribedate.bootstrapDatepicker( 'getDate' ), 'tribeMonthQuery' );
 					}
@@ -365,6 +383,7 @@
 						ts.date = $tribedate.val();
 					}
 				}
+
 				else {
 					if ( !dateMod ) {
 						ts.date = td.cur_date.slice( 0, -3 );
@@ -476,7 +495,7 @@
 			if ( tt.pushstate && !ts.filter_cats ) {
 
 				// @ifdef DEBUG
-				dbug && debug.time( 'Month View Ajax Timer' );
+				dbug && tec_debug.time( 'Month View Ajax Timer' );
 				// @endif
 
 				$( te ).trigger( 'tribe_ev_ajaxStart' ).trigger( 'tribe_ev_monthView_AjaxStart' );
@@ -507,7 +526,7 @@
 
 						// @ifdef DEBUG
 						if ( dbug && response.html === 0 ) {
-							debug.warn( 'Month view ajax had an error in the query and returned 0.' );
+							tec_debug.warn( 'Month view ajax had an error in the query and returned 0.' );
 						}
 						// @endif
 
@@ -564,7 +583,7 @@
 						$( te ).trigger( 'ajax-success.tribe' ).trigger( 'tribe_ev_monthView_ajaxSuccess' );
 
 						// @ifdef DEBUG
-						dbug && debug.timeEnd( 'Month View Ajax Timer' );
+						dbug && tec_debug.timeEnd( 'Month View Ajax Timer' );
 						// @endif
 					}
 				);
@@ -581,8 +600,8 @@
 		}
 
 		// @ifdef DEBUG
-		dbug && debug.info( 'TEC Debug: tribe-events-ajax-calendar.js successfully loaded, Tribe Events Init finished' );
-		dbug && debug.timeEnd( 'Tribe JS Init Timer' );
+		dbug && tec_debug.info( 'TEC Debug: tribe-events-ajax-calendar.js successfully loaded, Tribe Events Init finished' );
+		dbug && tec_debug.timeEnd( 'Tribe JS Init Timer' );
 		// @endif
 	} );
 

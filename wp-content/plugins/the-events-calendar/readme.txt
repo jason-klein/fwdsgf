@@ -3,10 +3,10 @@
 Contributors: ModernTribe, borkweb, barry.hughes, bordoni, brianjessee, aguseo, cliffpaulick, courane01, faction23, GeoffBel, geoffgraham, ggwicz, jbrinley, jentheo, leahkoerper, lucatume, mastromktg, MZAWeb, neillmcshea, nicosantos, patriciahillebrandt, peterchester, reid.peifer, roblagatta, ryancurban, shane.pearlman, tribecari, vicskf, zbtirrell
 Tags: events, calendar, event, venue, organizer, dates, date, google maps, conference, workshop, concert, meeting, seminar, summit, class, modern tribe, tribe, widget
 Donate link: http://m.tri.be/29
-Requires at least: 4.5
-Stable tag: 4.6.20.1
-Tested up to: 4.9.6
-Requires PHP: 5.2.4
+Requires at least: 4.7
+Stable tag: 4.8.1
+Tested up to: 5.0.3
+Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,7 +25,7 @@ Looking for additional functionality including recurring events, ticket sales, p
 <strong>Check out [Events Calendar PRO](http://m.tri.be/mj) and [other add-ons](http://m.tri.be/2a)</strong>
 
 ><strong>New Import Tool!</strong>
->We’ve made bulk event imports easier to manage than ever. This add-on service for The Events Calendar allows you to import events from your favorite sources, including Meetup, Google Calendar, iCalendar, CSV, and ICS.
+>We’ve made bulk event imports easier to manage than ever. This add-on service for The Events Calendar allows you to import events from your favorite sources, including Meetup, Google Calendar, iCalendar, CSV, ICS and Other URLs (beta).
 >[Check out Event Aggregator now](http://m.tri.be/197u).
 
 = Built solid & supported =
@@ -214,6 +214,252 @@ Some things to consider before posting on the forum:
 Still not happy? Shoot us an email to support@theeventscalendar.com or tweet to [@TheEventsCal](https://twitter.com/TheEventsCal) and tell us why. We'll do what we can to make it right.
 
 == Changelog ==
+
+= [4.8.1] 2019-02-14 =
+
+* Feature - Introduced new "(do not override)" default post status for Eventbrite imports in Event Aggregator. This preserves events' original statuses from Eventbrite.com upon import (e.g., "draft" events will not be automatically set to "publish" upon import) [112346]
+* Fix - Make sure the setting for "Default mobile view" is respected. Thanks to Kathleen, Tim and others for reporting this! [119271]
+* Fix - Apply block closer to price block [120108]
+* Tweak - Added new filter `tribe_aggregator_new_event_post_status_before_import` to allow for custom handling of an event's post status before EA an import is completed [112648]
+* Tweak - Added filters: `tribe_events_admin_js_ajax_url_data`
+* Tweak - Unload Image Widget Plus version 1.0.2 or older to Prevent it from creating fatals on The Events Calendar
+* Language - 2 new strings added, 150 updated, 1 fuzzied, and 0 obsoleted
+
+= [4.8.0.1] 2019-02-07 =
+
+* Fix - Modify extension dependency checking with new system to determine if it can load [122368]
+* Tweak - Prevent most extensions from loading if Event Tickets is on an older version to prevent conflicts [122368]
+
+= [4.8] 2019-02-05 =
+
+* Feature - Add check and enforce PHP 5.6 as the minimum version [116282]
+* Feature - Add system to check plugin versions to inform you to update and prevent site breaking errors [116841]
+* Tweak - Added filters: `tribe_not_php_version_names`
+* Deprecated - Constants MIN_ET_VERSION and MIN_COMMON_VERSION in Tribe__Events__Main, use $min_et_version property and no replacement for MIN_COMMON_VERSION
+* Deprecated - The `is_delayed_activation()`, `maybe_delay_activation_if_outdated_common()`, and `checkAddOnCompatibility()` method has been deprecated in `Tribe__Events__Main` in favor of new Dependency Checking System
+* Language - 7 new strings added, 139 updated, 0 fuzzied, and 1 obsoleted
+
+= [4.7.4] 2019-01-21 =
+
+* Fix - Display the tags block delimiter in the editor [119393]
+* Fix - Fixed a number of small layout bugs with the new Twenty Nineteen core theme [119689]
+* Fix - Save the "Event Options" when using the block editor [120168]
+* Fix - Filter correctly when in Classic Editor page [120137]
+* Fix - Give the ability to switch back from all day events in date time block [120266]
+* Fix - Properly align the search or create results [120460]
+* Fix - iCal export content for events created with the block editor [118679]
+* Fix - Moved the "Remove venue" button for a better user experience when removing venues from an event [120267]
+* Fix - Date/time block conflicts when clicking to open the block options [119413]
+* Fix - Layout bugs with the new Twenty Nineteen core theme [119689]
+* Fix - Include UTC dates meta on the event creation from the block editor [120399]
+* Tweak - Ensure we don't re-apply `wpautop()` to content that has had it removed [120562]
+* Tweak - Added `tribe_events_admin_js_ajax_url_data` filter to make filtering the JS vars of TEC's admin JS easier [116973]
+* Tweak - Adjusted content in the admin welcome page that users are brought to upon newly activating The Events Calendar [117795]
+* Tweak - Changed views: `blocks/event-tags`
+* Language - 3 new strings added, 21 updated, 1 fuzzied, and 5 obsoleted
+
+= [4.7.3] 2018-12-19 =
+
+* Tweak - Tweak the registration of the Event, Venue, and Organizer post types so they use some new post type labels introduced in WordPress 5.0 like `item_updated`, `item_scheduled`, etc. [119451]
+* Fix - Password protected events breaking the month view. Thanks to Lindsay, Simon and others for flagging this out! [117385]
+* Fix - Add proper capitalization for Event Price for Blocks Editor [119140]
+* Fix - Make sure Datetime Format for Datepickers are respected on the Blocks Editor [117428]
+* Fix - Correct text domain and remove old `events-gutenberg` [118656]
+* Fix - Properly display recurrence description on Blocks Editor view [119354]
+* Fix - Point support links to the correct places [117795]
+* Language - 27 new strings added, 106 updated, 0 fuzzied, and 13 obsoleted
+
+= [4.7.2] 2018-12-13 =
+
+* Feature - Added new action `tribe_events_before_event_template_data_date_display` and `tribe_events_after_event_template_data_date_display`
+* Tweak - Corrected font on time picker components in Event Date Time block [116907]
+* Tweak - Adjusted padding on the Event Date Time block [118697]
+* Tweak - Set default start time to 8:00am and default end time to 5:00pm in Event Date Time block [118112]
+* Fix - Corrected an issue where feature detection of async-process support would fire too many requests [118876]
+* Fix - Removed tribe_events_template_data()'s dependency on Events Calendar PRO, which could lead to a fatal error under some conditions [119263]
+* Fix - Made the Event Date Time block respect the timezone settings [118682]
+* Fix - Removed Price block dashboard gap [118683]
+* Fix - Made sure all block editor code for Meta saving is PHP 5.2 compatible
+* Fix - Prevented `undefined` from been displayed at the Event Date Time separator fields [119337]
+* Fix - Solved 500 error when trying to update an event [118058]s
+
+= [4.7.1] 2018-12-05 =
+
+* Feature - Added additional caching to TEC REST API archives and the Post Repository event/venue/organizer responses [117159]
+* Feature - Added new `tribe_events_set_month_view_events_from_cache` action to make it easier to listen for when Month View events are retrieved from the Month View cache [116124]
+* Fix - Importing CSV files with whitespace at the beginning of the rows won't remove headers and skip columns on Preview [117236]
+* Fix - Prevent JavaScript error in Month View when the Date filter is removed from the Tribe Bar (thank you to @tyrann0us on GitHub for submitting this fix!) [116995]
+* Fix - Facilitate automated updates for Events Calendar PRO even if it's requirements have not been met
+
+= [4.7.0.1] 2018-11-30 =
+
+* Fix - Update common library to maximize compatibility with earlier PHP versions (our thanks to @megabit81 for highlighting this problem) [119073]
+* Fix - Update common library to ensure better compatibility with addons running inside multisite networks [119044]
+* Language - 0 new strings added, 141 updated, 0 fuzzied, and 0 obsoleted
+
+= [4.7] 2018-11-29 =
+
+* Feature - added new setting to activate the block editor on events for users running the WordPress 5.0 beta.
+* Feature - added an Event Date Time block to add and display the event date and time
+* Feature - added an Event Price block to add and display the event price and optional event description
+* Feature - added an Event Organizer block to add and display an organizer on an event single
+* Feature - added an Event Venue block to add and display the event venue information including optional link or map
+* Feature - added an Event Website block to add and display an external website link as a button with custom label
+* Feature - added an Event Sharing block to display event export options and allow for more customization
+* Feature - added an Event Details Classic block to maintain a combined content display as in the classic editor
+* Feature - added a Featured Image block to display an event’s featured image in the editor content
+* Feature - added a Tags block to display an event’s tags in the editor content
+* Feature - added an Event Categories block to display an event’s categories in the editor content
+* Feature - added a new Events Blocks section to the block inserter
+* Tweak - Added filters: `tribe_blocks_editor_update_classic_content_params`, `tribe_blocks_editor_update_classic_content`, `tribe_events_editor_default_classic_template`, `tribe_events_editor_default_template`, `tribe_events_google_maps_api`, `tribe_events_editor_assets_should_enqueue_frontend`, `tribe_events_single_map_zoom_level`, `tribe_events_single_event_time_formatted`, `tribe_events_single_event_time_title`, `tribe_events_event_block_datetime_use_yearless_format`, `tribe_get_event_website_link_target`, `tribe_events_single_event_time_formatted`, `tribe_events_single_event_time_title`
+* Tweak - Added actions: `tribe_blocks_editor_flag_post_classic_editor`, `tribe_events_editor_register_blocks`, `tribe_events_single_event_meta_primary_section_start`, `tribe_events_single_event_meta_primary_section_end`, `tribe_events_single_event_meta_secondary_section_start`, `tribe_events_single_event_meta_secondary_section_end`, `tribe_events_single_meta_details_section_start`, `tribe_events_single_meta_details_section_end`, `tribe_events_single_meta_map_section_start`, `tribe_events_single_meta_map_section_end`, `tribe_events_single_meta_organizer_section_start`, `tribe_events_single_meta_organizer_section_end`, `tribe_events_single_meta_venue_section_start`, `tribe_events_single_meta_venue_section_end`
+* Tweak - Changed views: `blocks/classic-event-details`, `blocks/event-category`, `blocks/event-datetime`, `blocks/event-links`, `blocks/event-organizer`, `blocks/event-price`, `blocks/event-tags`, `blocks/event-venue`, `blocks/event-website`, `blocks/featured-image`, `blocks/parts/details`, `blocks/parts/map`, `blocks/parts/organizer`, `blocks/parts/venue`, `silence`, `single-event-blocks`, `single-event`, `single-event/back-link`, `single-event/comments`, `single-event/content`, `single-event/footer`, `single-event/notices`, `single-event/title`
+* Language - 11 new strings added, 0 updated, 0 fuzzied, and 30 obsoleted
+
+= [4.6.26.1] 2018-11-21 =
+
+* Fix - Resolved a compatibility issue with WordPress version 4.7.11 and earlier (our thanks to @placer69 and @earthnutvt for flagging this) [118627]
+
+= [4.6.26] 2018-11-13 =
+
+* Fix - Fixed the setting-up of strings in the Tribe Bar datepicker to ensure they're translatable into languages other than English [115286]
+* Tweak - Improved the legibility of text in Featured Events that are in the Event List widget [116702]
+* Tweak - Clarified a number of maps-related settings strings [114865]
+
+= [4.6.25] 2018-10-22 =
+
+* Fix - List only enabled views on the "Default View" option. Thanks to wescole, John Meuse and others for reporting! [114807]
+* Fix - Handle left-over Facebook scheduled imports and notices [114831]
+* Fix - Fixed event navigation when the mini calendar widget was on the event page. Props to Matt and wescole for flagging this [114359]
+* Fix - Ensure columns without headers are handled in CSV imports [114199]
+* Tweak - Added notice for the Events Gutenberg extension and eBook download [115543]
+* Tweak - Avoid unnecessary HTTP calls in the Settings screens [114013]
+* Tweak - Show only applicable refinements for the Eventbrite source types in Event Aggregator imports [107009]
+* Tweak - Added `tribe_aggregator_resolve_geolocation` filter to allow for disabling of Geocoding using the EA service [114171]
+* Tweak - Added `tribe_aggregator_clean_unsupported` filter to specify whether unsupported origin records should be removed or not
+
+= [4.6.24.1] 2018-10-08 =
+
+* Fix - Fixed an issue where a fatal error could be generated when trying to save a new Event Aggregator scheduled import [115339]
+* Fix - Handle left-over Facebook scheduled imports and notices [114831]
+* Tweak - Added the `tribe_aggregator_import_setting_origins` filter to the origins available for default import settings [115704]
+
+= [4.6.24] 2018-10-03 =
+
+* Fix - Prevent broken and low-resolution Google Maps if user has not provided a Google Maps API key of their own by providing our own fallback API key [114442]
+* Fix - Only load widget assets when widget is active on the page [113141]
+* Fix - Ensure that venue, organizer, and meta information doesn't show on password-protected events [102643]
+* Fix - Correct the Google Maps API link in the Settings help text to point to the correct API page [112322]
+* Fix - Restores the event categories and tags creation summary in CSV imports [105888]
+* Fix - Updated the Events Gutenberg extension install check to show only when the extension is not active [114577]
+* Fix - Stop potential fatal errors from debug logging when running EA import actions from command line [114555]
+* Fix - Fixed a bug where it was often not possible to un-check the "Enable JSON-LD" option in the Events List Widget (thanks to @myrunningresource and @craigwilcox for reporting this!) [113541]
+* Fix - Ensure that the `tribe-events-bar-should-show` filter functions as aspected; if `__return_false` is passed, the Tribe Bar will be totally hidden (thanks @debranettles for reporting this!) [112260]
+* Fix - Added checks to prevent JS Type Error in mobile view. Thanks szenenight, agrilife and others for flagging this! [113524]
+* Tweak - Added the `tribe_events_month_daily_events` filter to the Month view [114041]
+* Tweak - Move Google Maps API loading to tribe_assets and only load once on single views when PRO is active, thanks to info2grow first reporting [112221]
+* Tweak - Accept 0 as an argument in tribe_get_events() so that `'post_parent' => 0` works, thanks Cy for the detailed report [111518]
+* Fix - handle left-over Facebook scheduled imports and notices [114831]
+* Tweak - Added new filters for customizing the fallback Google Maps embeds: `tribe_is_using_basic_gmaps_api`, `tribe_get_basic_gmap_embed_url`, and `tribe_get_basic_gmap_embed_url_args` [114442]
+* Tweak - Fixed the handling of the global $post variable in some Month View templates to make it easier for themers to customize those templates [113283]
+* Tweak - Ensure linked posts are listed alphabetically in metabox dropdowns, as they are in all other admin locations [108120]
+* Tweak - Added the `tribe_events_month_daily_events` filter to the Month view [114041]
+* Tweak - Move Google Maps API loading to tribe_assets and only load once on single views when PRO is active, thanks to info2grow first reporting [112221]
+* Tweak - Accept 0 as an argument in tribe_get_events() so that `'post_parent' => 0` works, thanks Cy for the detailed report [111518]
+* Tweak - Added the `tribe_aggregator_record_by_origin` filter to allow new EA origins [114652]
+* Tweak - Added the `tribe_aggregator_service_post_import_args` filter to allow new EA origins [114652]
+* Tweak - Added the `tribe_aggregator_import_validate_meta_by_origin` filter to allow new EA origins [114652]
+* Tweak - Added the `tribe_events_aggregator_refine_keyword_exclusions` filter to allow new EA origins [114652]
+* Tweak - Added the `tribe_events_aggregator_refine_location_exclusions` filter to allow new EA origins [114652]
+* Tweak - Added the `tribe_aggregator_event_translate_service_data_field_map` filter to allow new EA origins [114652]
+* Tweak - Added the `tribe_aggregator_event_translate_service_data_venue_field_map` filter to allow new EA origins [114652]
+* Tweak - Added the `tribe_aggregator_event_translate_service_data_organizer_field_map` filter to allow new EA origins [114652]
+* Tweak - Added the `tribe_events_status_third_party` action to allow new EA origins [114652]
+* Tweak - Added the `tribe_events_aggregator_import_form` action to allow new EA origins [114652]
+* Tweak - Added `$origin_show_map_options` parameter to the `tribe_aggregator_fields` filter to allow new EA origins to make use of them [114652]
+* Fix - Fixed an issue where a fatal error could be generated when trying to save a new Event Aggregator scheduled import [115339]
+
+= [4.6.23] 2018-09-12 =
+
+* Fix - Fixed the "Full Styles" mobile view. Thanks Matthew, Laura and others for flagging this! [112301]
+* Fix - Modify resource url function to work in mu-plugin directory, thanks to Doug for reporting it  [86104]
+* Fix - Remove references to and settings for Facebook importing in Event Aggregator [112432]
+* Fix - Ensure Event Aggregator allows for importing events from Eventbrite sites other than eventbrite.com, including but not limited to eventbrite.ca, .co.uk, and .co.nz [107821]
+* Fix - Allow venue location fields to be intentionally empty on Venue Singular REST API calls [108834]
+* Tweak - Add the WordPress Custom Fields Metabox show|hide settings from the Events Calendar Pro [109815]
+* Tweak - Allow changing Event Aggregator import process system between the asynchronous and the cron-based one; previously only available as a filter [113418, 113475]
+* Tweak - Allow stopping and clearing asynchronous queue processes from the admin UI [113418, 113475]
+* Deprecated - `Tribe__Events__Aggregator__Record__Facebook`
+
+= [4.6.22.1] 2018-08-27 =
+
+* Fix - Allow user to choose venues not created by them. Props to @integrity, @nomadadmin, and many others for reporting this! [113147]
+
+= [4.6.22] 2018-08-22 =
+
+* Add - Allow filtering events, in REST API requests, by their post ID with `include` [94326]
+* Add - Enable future event display to get all events in the future that have not started [70769]
+* Add - Allow filtering events, in REST API requests, by their post ID with `include` [94326]
+* Add - Enable future event display to get all events in the future that have not started [70769]
+* Fix - Prevent subsequent CSV imports from duplicating events in some instances [102745]
+* Fix - The "Import events but preserve local changes to event fields" Event Aggregator change authority setting will now behave as expected [87443]
+* Fix - Multiple fixes regarding linked post types (e.g. Organizers and custom post types) - props to @natureslens and others for reporting these [105116]:
+  * Now correctly saves in their drag-and-drop order
+  * Deprecated the functions added in version 4.6.13 that previously attempted to fix ordering logic but was not done in a backwards-compatible way: `get_order_meta_key()` and `tribe_sanitize_organizers()`
+  * We no longer rely on a separate postmeta value dedicated to ordering linked posts (e.g. `_EventOrganizerID_Order`), and you may want to remove all such values from your database after re-saving any events that have linked posts and their ordering is important
+  * `tribe_get_linked_posts_by_post_type()` now works as expected, no longer returning zero results in error, nor returning all of the post type's posts if there are none linked. The `tribe_events_return_all_linked_posts_if_none` filter was added, as it is necessary for this fix.
+  * Editing an existing event no longer loses the linked posts just because they were not part of the submission. Example of the bug in prior versions: If organizers are editable in the wp-admin event edit screen but not on the Community Events "event edit" form (via template override or other custom code), all pre-existing organizers were removed in error.
+* Fix - Handle the case where Event Aggregator import queues might get stuck when deleting import records [111856]
+* Fix - Only show admin notice when it is a top-level page with the event slug, thanks to MikeNGarrett for the code fix! [111186]
+* Fix - Change template_redirect to an action for some legacy view redirects, thanks barryceelen! [110463]
+* Fix - Correctly import and set Organizers for iCal and ICS files Event Aggregator imports [96059]
+* Fix - Retain category title in month view and month view shortcode, thanks corthoover for the first report [108258]
+* Fix - The "Import events but preserve local changes to event fields" Event Aggregator change authority setting will now behave as expected [87443]
+* Fix - Handle the case where Event Aggregator import queues might get stuck when deleting import records [111856]
+* Fix - Prevent subsequent CSV imports from duplicating events in some instances [102745]
+* Fix - Fix the classic header option not working. Thanks @hanemac, David Luyendyk and others for flagging this! [111672]
+* Tweak - Namespace javascript debug function to prevent conflicts causing a function found, thanks to Tom-Mulvey for the fix [110462]
+* Tweak - Add venue name to address string for iCal and gCal export, thanks for the coding from sylviavanos [110464]
+* Tweak -  Drop the order from the query WPML linked query as it is set later in the method, thanks to dgwatkins for the PR [110459]
+* Tweak - Display JS debug messages only if setting is set or through the `tribe_events_js_debug` filter. Thanks to Rob, @aand and others for flagging this! [82781]
+
+= [4.6.21] 2018-08-01 =
+
+* Add - Make global $post obj available to tribe_events_get_the_excerpt() with setup_postdata($post) [108043]
+* Add - Added WPML metadata improvements for Organizers and Venue. Thanks to David Garcia Watkins and the entire WPML team for their contribution [106798]
+* Fix - Ensure no console errors are being displayed if there's no Google Maps API key present. Thanks Greg for flagging this [95312]
+* Fix - Fixed an issue where saving Event Aggregator scheduled imports with an empty preview would generate PHP notices [110311]
+* Fix - Escape each closing html element in month view tooltip to prevent PHP parser from exposing html, thanks to Karen for a solution [64834]
+* Fix - Sending empty 'categories' and 'tags' for the REST API event endpoints when inserting and updating events [109627]
+* Fix - Prevent selection of past dates when setting up Scheduled Other URL Imports in Event Aggregator [111227]
+* Tweak - Manage plugin assets via `tribe_assets()` [40267]
+* Deprecated - Tribe__Events__Asset__Abstract_Asset in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Abstract_Events_Css in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Admin_Menu in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Admin_Ui in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Admin in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Ajax_Calendar in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Ajax_Dayview in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Ajax_List in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Bootstrap_Datepicker in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Calendar_Script in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Chosen in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Datepicker in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Dialog in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Dynamic in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Ecp_Plugins in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Events_Css_Default in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Events_Css_Full in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Events_Css_Skeleton in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Events_Css in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Factory in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Jquery_Placeholder in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Jquery_Resize in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__PHP_Date_Formatter in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Settings in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Smoothness in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Tribe_Events_Bar in favor of using `tribe_asset`
+* Deprecated - Tribe__Events__Asset__Tribe_Select2 in favor of using `tribe_asset`
 
 = [4.6.20.1] 2018-07-10 =
 

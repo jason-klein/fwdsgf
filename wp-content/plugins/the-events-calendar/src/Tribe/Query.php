@@ -330,6 +330,15 @@ if ( ! class_exists( 'Tribe__Events__Query' ) ) {
 								$query->set( 'eventDate', $query->get( 'eventDate' ) );
 							}
 							break;
+						case 'future':
+							$event_date = ( '' !== $query->get( 'eventDate' ) )
+								? $query->get( 'eventDate' )
+								: date_i18n( Tribe__Date_Utils::DBDATETIMEFORMAT );
+							$query->set( 'start_date', ( '' != $query->get( 'eventDate' ) ? tribe_beginning_of_day( $event_date ) : tribe_format_date( current_time( 'timestamp' ), true, 'Y-m-d H:i:00' ) ) );
+							$query->set( 'order', self::set_order( 'ASC', $query ) );
+							$query->set( 'orderby', self::set_orderby( null, $query ) );
+							$query->set( 'hide_upcoming', $maybe_hide_events );
+							break;
 						case 'all':
 						case 'list':
 						default: // default display query
@@ -488,19 +497,21 @@ if ( ! class_exists( 'Tribe__Events__Query' ) ) {
 		 * @return boolean
 		 */
 		public static function should_remove_date_filters( $query ) {
+			// if the query flag to remove date filters is explicitly set then remove them
+			if ( true === $query->get( 'tribe_remove_date_filters', false ) ) {
+				return true;
+			}
+
 			// if we're doing ajax, let's keep the date filters
 			if ( tribe( 'context' )->doing_ajax() ) {
 				return false;
 			}
 
 			// otherwise, let's remove the date filters if we're in the admin dashboard and the query is
-			// and event query on the tribe_events edit page
-			return (
-				is_admin()
+			// an event query on the tribe_events edit page
+			return is_admin()
 				&& $query->tribe_is_event_query
-				&& Tribe__Admin__Helpers::instance()->is_screen( 'edit-' . Tribe__Events__Main::POSTTYPE )
-			)
-			|| true === $query->get( 'tribe_remove_date_filters', false );
+				&& Tribe__Admin__Helpers::instance()->is_screen( 'edit-' . Tribe__Events__Main::POSTTYPE );
 		}
 
 		/**
@@ -669,6 +680,9 @@ if ( ! class_exists( 'Tribe__Events__Query' ) ) {
 					$end_clause    = $wpdb->prepare( "($event_end_date >= %s AND $event_start_date <= %s )", $start_date, $end_date );
 					$within_clause = $wpdb->prepare( "($event_start_date < %s AND $event_end_date >= %s )", $start_date, $end_date );
 					$where_sql .= " AND ($start_clause OR $end_clause OR $within_clause)";
+				} elseif ( 'future' === $query->get( 'eventDisplay' ) && '' !== $start_date ) {
+					$start_clause = $wpdb->prepare( "{$postmeta_table}.meta_value >= %s", $start_date );
+					$where_sql   .= " AND ($start_clause)";
 				} else {
 					if ( $start_date != '' ) {
 						$start_clause  = $wpdb->prepare( "{$postmeta_table}.meta_value >= %s", $start_date );
@@ -928,7 +942,8 @@ if ( ! class_exists( 'Tribe__Events__Query' ) ) {
 		public static function getHideFromUpcomingEvents() {
 			global $wpdb;
 
-			$cache     = new Tribe__Cache();
+			/** @var Tribe__Cache $cache */
+			$cache     = tribe( 'cache' );
 			$cache_key = 'tribe-hide-from-upcoming-events';
 			$found     = $cache->get( $cache_key, 'save_post' );
 			if ( is_array( $found ) ) {
@@ -970,7 +985,8 @@ if ( ! class_exists( 'Tribe__Events__Query' ) ) {
 			$args = array_filter( $args, array( __CLASS__, 'filter_args' ) );
 			ksort( $args );
 
-			$cache     = new Tribe__Cache();
+			/** @var Tribe__Cache $cache */
+			$cache     = tribe( 'cache' );
 			$cache_key = 'daily_counts_and_ids_' . serialize( $args );
 			$found     = $cache->get( $cache_key, 'save_post' );
 			if ( $found ) {
@@ -1077,9 +1093,12 @@ if ( ! class_exists( 'Tribe__Events__Query' ) ) {
 				update_object_term_cache( $final_event_ids, Tribe__Events__Main::POSTTYPE );
 				update_postmeta_cache( $final_event_ids );
 			}
+
 			// return IDs per day and total counts per day
 			$return    = array( 'counts' => $counts, 'event_ids' => $event_ids );
-			$cache     = new Tribe__Cache;
+
+			/** @var Tribe__Cache $cache */
+			$cache     = tribe( 'cache' );
 			$cache_key = 'daily_counts_and_ids_' . serialize( $args );
 			$cache->set( $cache_key, $return, Tribe__Cache::NON_PERSISTENT, 'save_post' );
 
@@ -1121,7 +1140,8 @@ if ( ! class_exists( 'Tribe__Events__Query' ) ) {
 			$args = array_filter( $args, array( __CLASS__, 'filter_args' ) );
 			ksort( $args );
 
-			$cache     = new Tribe__Cache();
+			/** @var Tribe__Cache $cache */
+			$cache     = tribe( 'cache' );
 			$cache_key = 'get_events_' . get_current_user_id() . serialize( $args );
 
 			$result = $cache->get( $cache_key, 'save_post' );
@@ -1203,7 +1223,7 @@ if ( ! class_exists( 'Tribe__Events__Query' ) ) {
 		 * @return bool
 		 **/
 		private static function filter_args( $arg ) {
-			if ( empty( $arg ) && $arg !== false ) {
+			if ( empty( $arg ) && $arg !== false && 0 !== $arg ) {
 				return false;
 			}
 
