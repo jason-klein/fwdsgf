@@ -210,7 +210,7 @@ class Jetpack_Sync_Functions {
 		/**
 		 * Allows overriding of the home_url value that is synced back to WordPress.com.
 		 *
-		 * @since 5.2
+		 * @since 5.2.0
 		 *
 		 * @param string $home_url
 		 */
@@ -223,7 +223,7 @@ class Jetpack_Sync_Functions {
 		/**
 		 * Allows overriding of the site_url value that is synced back to WordPress.com.
 		 *
-		 * @since 5.2
+		 * @since 5.2.0
 		 *
 		 * @param string $site_url
 		 */
@@ -382,6 +382,22 @@ class Jetpack_Sync_Functions {
 		);
 
 		/* translators: %s is UTC offset, e.g. "+1" */
-		return sprintf( __( 'UTC%s' ), $formatted_gmt_offset );
+		return sprintf( __( 'UTC%s', 'jetpack' ), $formatted_gmt_offset );
+	}
+	// New in WP 5.1
+	public static function get_paused_themes() {
+		if ( function_exists( 'wp_paused_themes' ) ) {
+			$paused_themes = wp_paused_themes();
+			return $paused_themes->get_all();
+		}
+		return false;
+	}
+	// New in WP 5.1
+	public static function get_paused_plugins() {
+		if ( function_exists( 'wp_paused_plugins' ) ) {
+			$paused_plugins = wp_paused_plugins();
+			return $paused_plugins->get_all();
+		}
+		return false;
 	}
 }

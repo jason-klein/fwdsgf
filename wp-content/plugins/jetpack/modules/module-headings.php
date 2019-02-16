@@ -39,6 +39,12 @@ function jetpack_get_module_i18n( $key ) {
 				'recommended description' => _x( 'Adds a button to your post and page editors, allowing you to build simple forms to help visitors stay in touch.', 'Jumpstart Description', 'jetpack' ),
 			),
 
+			'copy-post' => array(
+				'name' => _x( 'Copy Post', 'Module Name', 'jetpack' ),
+				'description' => _x( 'Copy an existing post\'s content into a new draft post.', 'Module Description', 'jetpack' ),
+				'recommended description' => _x( 'Copy an existing post\'s content into a new post.', 'Jumpstart Description', 'jetpack' ),
+			),
+
 			'custom-content-types' => array(
 				'name' => _x( 'Custom content types', 'Module Name', 'jetpack' ),
 				'description' => _x( 'Display different types of content on your site with custom content types.', 'Module Description', 'jetpack' ),
@@ -123,6 +129,11 @@ function jetpack_get_module_i18n( $key ) {
 				'description' => _x( 'Receive instant notifications of site comments and likes.', 'Module Description', 'jetpack' ),
 			),
 
+			'photon-cdn' => array(
+				'name' => _x( 'Asset CDN', 'Module Name', 'jetpack' ),
+				'description' => _x( 'Serve static assets from our servers', 'Module Description', 'jetpack' ),
+			),
+
 			'photon' => array(
 				'name' => _x( 'Photon', 'Module Name', 'jetpack' ),
 				'description' => _x( 'Serve images from our servers', 'Module Description', 'jetpack' ),
@@ -168,7 +179,7 @@ function jetpack_get_module_i18n( $key ) {
 			'sharedaddy' => array(
 				'name' => _x( 'Sharing', 'Module Name', 'jetpack' ),
 				'description' => _x( 'Allow visitors to share your content.', 'Module Description', 'jetpack' ),
-				'recommended description' => _x( 'Twitter, Facebook and Google+ buttons at the bottom of each post, making it easy for visitors to share your content.', 'Jumpstart Description', 'jetpack' ),
+				'recommended description' => _x( 'Twitter, Facebook and many other buttons at the bottom of each post, making it easy for visitors to share your content.', 'Jumpstart Description', 'jetpack' ),
 			),
 
 			'shortcodes' => array(
@@ -187,7 +198,7 @@ function jetpack_get_module_i18n( $key ) {
 			),
 
 			'sso' => array(
-				'name' => _x( 'Single Sign On', 'Module Name', 'jetpack' ),
+				'name' => _x( 'Secure Sign On', 'Module Name', 'jetpack' ),
 				'description' => _x( 'Allow users to log into this site using WordPress.com accounts', 'Module Description', 'jetpack' ),
 				'recommended description' => _x( 'Lets you log in to all your Jetpack-enabled sites with one click using your WordPress.com account.', 'Jumpstart Description', 'jetpack' ),
 			),
@@ -260,6 +271,7 @@ function jetpack_get_module_i18n_tag( $key ) {
 
 			// Modules with `Writing` tag:
 			//  - modules/after-the-deadline.php
+			//  - modules/copy-post.php
 			//  - modules/custom-content-types.php
 			//  - modules/enhanced-distribution.php
 			//  - modules/json-api.php
@@ -271,6 +283,7 @@ function jetpack_get_module_i18n_tag( $key ) {
 
 			// Modules with `Photos and Videos` tag:
 			//  - modules/carousel.php
+			//  - modules/photon-cdn.php
 			//  - modules/photon.php
 			//  - modules/shortcodes.php
 			//  - modules/tiled-gallery.php
@@ -297,6 +310,7 @@ function jetpack_get_module_i18n_tag( $key ) {
 			//  - modules/infinite-scroll.php
 			//  - modules/lazy-images.php
 			//  - modules/minileven.php
+			//  - modules/photon-cdn.php
 			//  - modules/photon.php
 			//  - modules/seo-tools.php
 			//  - modules/shortcodes.php
@@ -316,6 +330,7 @@ function jetpack_get_module_i18n_tag( $key ) {
 			//  - modules/manage.php
 			//  - modules/minileven.php
 			//  - modules/monitor.php
+			//  - modules/photon-cdn.php
 			//  - modules/photon.php
 			//  - modules/protect.php
 			//  - modules/publicize.php
