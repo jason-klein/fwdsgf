@@ -9,6 +9,9 @@ RedirectMatch 301 /org/(.*) /events/list/?tribe_event_display=list&tribe_organiz
 </Files>
 
 # BEGIN WordPress
+# The directives (lines) between `BEGIN WordPress` and `END WordPress` are
+# dynamically generated, and should only be modified via WordPress filters.
+# Any changes to the directives between these markers will be overwritten.
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteBase /
