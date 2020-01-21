@@ -20,6 +20,30 @@
 			if ($el.length) {
 				$el.prop('readOnly', readOnly).toggle(!readOnly);
 			}
+        }).on("change", "input[name^='hh_vary_value[']", function () {
+
+            if (this.name === "hh_vary_value[*]") {
+                if (this.checked) {
+                    $("input[name^='hh_vary_value[']").not(this).prop("checked", false);
+                }
+            } else {
+                if (this.checked) {
+                    $("input[name='hh_vary_value[*]']").prop("checked", false);
+                }
+            }
+
+        }).on("change", "input[name^='hh_access_control_allow_methods_value[']", function () {
+
+        	if (this.name === "hh_access_control_allow_methods_value[*]") {
+                if (this.checked) {
+                    $("input[name^='hh_access_control_allow_methods_value[']").not(this).prop("checked", false);
+                }
+            } else {
+        		if (this.checked) {
+        			$("input[name='hh_access_control_allow_methods_value[*]']").prop("checked", false);
+				}
+			}
+
 		}).on('change', 'select[name="hh_access_control_allow_origin_value"]', function () {
 			var $el = $('input[name="hh_access_control_allow_origin_url"]'),
 				readOnly = $(this).find('option:selected').val() != 'origin';
@@ -97,8 +121,14 @@
 			});
 			
 			$this.closest('tr').before($clone);
-		}).on('click', '.hh-btn-delete-header, .hh-btn-delete-endpoint, .hh-btn-delete-origin, .hh-btn-delete-user', function () {
+		}).on('click', '.hh-btn-delete-header, .hh-btn-delete-endpoint, .hh-btn-delete-origin, .hh-btn-delete-user, .hh-btn-delete-ac', function () {
 			$(this).closest('tr').remove();
+        }).on("click", ".hh-btn-add-ac", function () {
+        	var $this = $(this);
+            $this.closest('tr').before('<tr> \
+					<td><input type="text" name="' + $this.data("name") + '" class="http-header-value" size="35" /></td> \
+					<td><button type="button" class="button button-small hh-btn-delete-ac" title="' + hh.lbl_delete + '">x</button></td> \
+				</tr>');
 		}).on("click", ".hh-btn-add-origin", function () {
 			$(this).closest('tr').before('<tr class="hh-acao"> \
 					<td>&nbsp;</td> \
@@ -124,6 +154,36 @@
 				$input.show();
 			} else {
 				$input.hide();
+			}
+		}).on("change", 'input[name^="hh_content_security_policy_value"]', function () {
+			
+			var $this = $(this);
+			
+			if (this.checked) {
+				if (/\[\*\]$/.test(this.name)) {
+					$this.closest("td").find('input[type="checkbox"]').not(this).prop("checked", false);
+					$this.closest("p").siblings("p").hide();
+				} else {
+					$this.closest("td").find('input[type="checkbox"][name$="[*]"]').prop("checked", false);
+				}
+			} else {
+				if (/\[\*\]$/.test(this.name)) {
+					$this.closest("p").siblings("p").show();
+				}
+			}
+		}).on("change", 'input[type="checkbox"][name="hh_cookie_security_value[SameSite]"]', function () {
+			if (this.checked) {
+				$(".hh-csv-value")
+					.removeClass("hh-hidden")
+					.find('input[type="radio"]')
+					.prop("disabled", false)
+					.filter(":first")
+					.prop("checked", true);
+			} else {
+                $(".hh-csv-value")
+					.addClass("hh-hidden")
+					.find('input[type="radio"]')
+					.prop("disabled", true);
 			}
 		});
 		
