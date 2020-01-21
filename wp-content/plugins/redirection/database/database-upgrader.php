@@ -1,6 +1,9 @@
 <?php
 
 abstract class Red_Database_Upgrader {
+	private $queries = [];
+	private $live = true;
+
 	/**
 	 * Return an array of all the stages for an upgrade
 	 *
@@ -39,6 +42,17 @@ abstract class Red_Database_Upgrader {
 		}
 	}
 
+	public function get_queries_for_stage( $stage ) {
+		global $wpdb;
+
+		$this->queries = [];
+		$this->live = false;
+		$this->$stage( $wpdb, false );
+		$this->live = true;
+
+		return $this->queries;
+	}
+
 	/**
 	 * Returns the current database charset
 	 *
@@ -49,7 +63,18 @@ abstract class Red_Database_Upgrader {
 
 		$charset_collate = '';
 		if ( ! empty( $wpdb->charset ) ) {
-			$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
+			// Fix some common invalid charset values
+			$fixes = [
+				'utf-8',
+				'utf',
+			];
+
+			$charset = $wpdb->charset;
+			if ( in_array( strtolower( $charset ), $fixes, true ) ) {
+				$charset = 'utf8';
+			}
+
+			$charset_collate = "DEFAULT CHARACTER SET $charset";
 		}
 
 		if ( ! empty( $wpdb->collate ) ) {
@@ -65,13 +90,18 @@ abstract class Red_Database_Upgrader {
 	 * @return bool true if query is performed ok, otherwise an exception is thrown
 	 */
 	protected function do_query( $wpdb, $sql ) {
+		if ( ! $this->live ) {
+			$this->queries[] = $sql;
+			return true;
+		}
+
 		// These are known queries without user input
 		// phpcs:ignore
 		$result = $wpdb->query( $sql );
 
 		if ( $result === false ) {
 			/* translators: 1: SQL string */
-			throw new Exception( sprintf( __( 'Failed to perform query "%s"' ), $sql ) );
+			throw new Exception( sprintf( 'Failed to perform query "%s"', $sql ) );
 		}
 
 		return true;
@@ -83,7 +113,7 @@ abstract class Red_Database_Upgrader {
 	 * @return object Database upgrader
 	 */
 	public static function get( $version ) {
-		include_once dirname( __FILE__ ) . '/schema/' . str_replace( [ '..', '/'  ], '', $version['file'] );
+		include_once dirname( __FILE__ ) . '/schema/' . str_replace( [ '..', '/' ], '', $version['file'] );
 
 		return new $version['class'];
 	}

@@ -6,7 +6,9 @@
 class Red_Latest_Database extends Red_Database_Upgrader {
 	public function get_stages() {
 		return [
+			/* translators: displayed when installing the plugin */
 			'create_tables' => __( 'Install Redirection tables', 'redirection' ),
+			/* translators: displayed when installing the plugin */
 			'create_groups' => __( 'Create basic data', 'redirection' ),
 		];
 	}
@@ -53,6 +55,7 @@ class Red_Latest_Database extends Red_Database_Upgrader {
 		delete_option( 'redirection_index' );
 		delete_option( 'redirection_options' );
 		delete_option( Red_Database_Status::OLD_DB_VERSION );
+		delete_option( Red_Database_Status::DB_UPGRADE_STAGE );
 	}
 
 	/**
@@ -126,7 +129,11 @@ class Red_Latest_Database extends Red_Database_Upgrader {
 	/**
 	 * Creates default group information
 	 */
-	public function create_groups( $wpdb ) {
+	public function create_groups( $wpdb, $is_live = true ) {
+		if ( ! $is_live ) {
+			return true;
+		}
+
 		$defaults = [
 			[
 				'name' => __( 'Redirections', 'redirection' ),
@@ -174,6 +181,8 @@ class Red_Latest_Database extends Red_Database_Upgrader {
 		return "CREATE TABLE IF NOT EXISTS `{$prefix}redirection_items` (
 			`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 			`url` mediumtext NOT NULL,
+			`match_url` varchar(2000) DEFAULT NULL,
+  			`match_data` text,
 			`regex` int(11) unsigned NOT NULL DEFAULT '0',
 			`position` int(11) unsigned NOT NULL DEFAULT '0',
 			`last_count` int(10) unsigned NOT NULL DEFAULT '0',
@@ -190,7 +199,8 @@ class Red_Latest_Database extends Red_Database_Upgrader {
 			KEY `status` (`status`),
 			KEY `regex` (`regex`),
 			KEY `group_idpos` (`group_id`,`position`),
-			KEY `group` (`group_id`)
+			KEY `group` (`group_id`),
+			KEY `match_url` (`match_url`(191))
 	  ) $charset_collate";
 	}
 

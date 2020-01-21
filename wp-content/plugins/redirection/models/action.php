@@ -1,7 +1,10 @@
 <?php
 
-class Red_Action {
-	function __construct( $values ) {
+abstract class Red_Action {
+	protected $code;
+	protected $type;
+
+	public function __construct( $values ) {
 		if ( is_array( $values ) ) {
 			foreach ( $values as $key => $value ) {
 				$this->$key = $value;
@@ -9,7 +12,7 @@ class Red_Action {
 		}
 	}
 
-	static function create( $name, $code ) {
+	public static function create( $name, $code ) {
 		$avail = self::available();
 
 		if ( isset( $avail[ $name ] ) ) {
@@ -17,7 +20,7 @@ class Red_Action {
 				include_once dirname( __FILE__ ) . '/../actions/' . $avail[ $name ][0];
 			}
 
-			$obj = new $avail[ $name ][1]( array( 'action_code' => $code ) );
+			$obj = new $avail[ $name ][1]( array( 'code' => $code ) );
 			$obj->type = $name;
 			return $obj;
 		}
@@ -25,7 +28,7 @@ class Red_Action {
 		return false;
 	}
 
-	static function available() {
+	public static function available() {
 		return array(
 			'url'     => array( 'url.php', 'Url_Action' ),
 			'error'   => array( 'error.php', 'Error_Action' ),
@@ -42,4 +45,14 @@ class Red_Action {
 	public function process_after( $code, $target ) {
 		return true;
 	}
+
+	public function get_code() {
+		return $this->code;
+	}
+
+	public function get_type() {
+		return $this->type;
+	}
+
+	abstract public function needs_target();
 }

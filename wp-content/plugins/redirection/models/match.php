@@ -15,7 +15,8 @@ abstract class Red_Match {
 
 	abstract public function save( array $details, $no_target_url = false );
 	abstract public function name();
-	abstract public function get_target( $url, $matched_url, $regex );
+	abstract public function get_target_url( $url, $matched_url, Red_Source_Flags $flag, $is_matched );
+	abstract public function is_match( $url );
 	abstract public function get_data();
 	abstract public function load( $values );
 
@@ -29,17 +30,19 @@ abstract class Red_Match {
 		return $url;
 	}
 
-	protected function get_target_regex_url( $matched_url, $target, $url ) {
-		return preg_replace( '@' . str_replace( '@', '\\@', $matched_url ) . '@', $target, $url );
+	protected function get_target_regex_url( $source_url, $target_url, $requested_url, Red_Source_Flags $flags ) {
+		$regex = new Red_Regex( $source_url, $flags->is_ignore_case() );
+
+		return $regex->replace( $target_url, $requested_url );
 	}
 
-	static function create( $name, $data = '' ) {
+	public static function create( $name, $data = '' ) {
 		$avail = self::available();
 		if ( isset( $avail[ strtolower( $name ) ] ) ) {
 			$classname = $name . '_match';
 
 			if ( ! class_exists( strtolower( $classname ) ) ) {
-				include( dirname( __FILE__ ) . '/../matches/' . $avail[ strtolower( $name ) ] );
+				include dirname( __FILE__ ) . '/../matches/' . $avail[ strtolower( $name ) ];
 			}
 
 			$class = new $classname( $data );
@@ -50,7 +53,7 @@ abstract class Red_Match {
 		return false;
 	}
 
-	static function all() {
+	public static function all() {
 		$data = array();
 
 		$avail = self::available();
@@ -62,7 +65,7 @@ abstract class Red_Match {
 		return $data;
 	}
 
-	static function available() {
+	public static function available() {
 		return array(
 			'url'      => 'url.php',
 			'referrer' => 'referrer.php',
@@ -75,6 +78,7 @@ abstract class Red_Match {
 			'server'   => 'server.php',
 			'ip'       => 'ip.php',
 			'page'     => 'page.php',
+			'language' => 'language.php',
 		);
 	}
 }
@@ -90,6 +94,16 @@ trait FromUrl_Match {
 		}
 
 		return $data;
+	}
+
+	public function get_target_url( $requested_url, $source_url, Red_Source_Flags $flags, $matched ) {
+		$target = $this->get_matched_target( $matched );
+
+		if ( $flags->is_regex() && $target ) {
+			return $this->get_target_regex_url( $source_url, $target, $requested_url, $flags );
+		}
+
+		return $target;
 	}
 
 	private function get_matched_target( $matched ) {
@@ -118,8 +132,8 @@ trait FromUrl_Match {
 }
 
 trait FromNotFrom_Match {
-	public $url_from;
-	public $url_notfrom;
+	public $url_from = '';
+	public $url_notfrom = '';
 
 	private function save_data( array $details, $no_target_url, array $data ) {
 		if ( $no_target_url === false ) {
@@ -130,6 +144,17 @@ trait FromNotFrom_Match {
 		}
 
 		return $data;
+	}
+
+	public function get_target_url( $requested_url, $source_url, Red_Source_Flags $flags, $matched ) {
+		// Action needs a target URL based on whether we matched or not
+		$target = $this->get_matched_target( $matched );
+
+		if ( $flags->is_regex() && $target ) {
+			return $this->get_target_regex_url( $source_url, $target, $requested_url, $flags );
+		}
+
+		return $target;
 	}
 
 	private function get_matched_target( $matched ) {
@@ -145,7 +170,7 @@ trait FromNotFrom_Match {
 	}
 
 	private function load_data( $values ) {
-		$values = unserialize( $values );
+		$values = @unserialize( $values );
 
 		if ( isset( $values['url_from'] ) ) {
 			$this->url_from = $values['url_from'];
