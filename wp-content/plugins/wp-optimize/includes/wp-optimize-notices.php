@@ -79,15 +79,6 @@ class WP_Optimize_Notices extends Updraft_Notices_1_0 {
 				'supported_positions' => $this->anywhere,
 				'validity_function' => 'translation_needed',
 			),
-			'keyy' => array(
-				'prefix' => '',
-				'title' => 'Keyy: Instant and secure logon with a wave of your phone',
-				'text' => __("Find out more about our revolutionary new WordPress plugin.", "wp-optimize") . $this->url_end(true, 'getkeyy.com'),
-				'image' => 'notices/keyy_logo.png',
-				'dismiss_time' => 'dismiss_notice',
-				'supported_positions' => $this->anywhere,
-				'validity_function' => 'is_keyy_installed',
-			),
 			'wpo-premium' => array(
 				'prefix' => '',
 				'title' => __("Perform optimizations while your visitors sleep", "wp-optimize"),
@@ -136,7 +127,7 @@ class WP_Optimize_Notices extends Updraft_Notices_1_0 {
 				'prefix' => '',
 				'title' => __("MetaSlider: the world's #1 slider plugin from the makers of WP-Optimize", "wp-optimize"),
 				'text' => __("With MetaSlider, you can easily add style and flare with beautifully-designed sliders.", "wp-optimize"),
-				'button_link' => 'https://metaslider.com',
+				'button_link' => 'https://www.metaslider.com',
 				'button_meta' => 'metaslider',
 				'image' => 'notices/metaslider_logo.png',
 				'dismiss_time' => 'dismiss_notice',
@@ -153,10 +144,11 @@ class WP_Optimize_Notices extends Updraft_Notices_1_0 {
 				'button_link' => 'https://getwpo.com',
 				'button_meta' => 'wp-optimize',
 				'dismiss_time' => 'dismiss_season',
-				'discount_code' => 'blackfridaysale2018',
-				'valid_from' => '2018-11-20 00:00:00',
-				'valid_to' => '2018-11-30 23:59:59',
+				'discount_code' => 'blackfridaysale2019',
+				'valid_from' => '2019-11-20 00:00:00',
+				'valid_to' => '2019-11-30 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
+				'validity_function' => 'is_wpo_premium_installed',
 			),
 			'christmas' => array(
 				'prefix' => '',
@@ -166,36 +158,39 @@ class WP_Optimize_Notices extends Updraft_Notices_1_0 {
 				'button_link' => 'https://getwpo.com',
 				'button_meta' => 'wp-optimize',
 				'dismiss_time' => 'dismiss_season',
-				'discount_code' => 'christmassale2018',
-				'valid_from' => '2018-12-01 00:00:00',
-				'valid_to' => '2018-12-25 23:59:59',
+				'discount_code' => 'christmassale2019',
+				'valid_from' => '2019-12-01 00:00:00',
+				'valid_to' => '2019-12-25 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
+				'validity_function' => 'is_wpo_premium_installed',
 			),
 			'newyear' => array(
 				'prefix' => '',
-				'title' => __('Happy New Year - 20% off WP-Optimize Premium until January 14th', 'wpo-premium'),
-				'text' => __('To benefit, use this discount code:', 'wpo-premium').' ',
+				'title' => __('Happy New Year - 20% off WP-Optimize Premium until January 14th', 'wp-optimize'),
+				'text' => __('To benefit, use this discount code:', 'wp-optimize').' ',
 				'image' => 'notices/new_year.png',
 				'button_link' => 'https://getwpo.com',
 				'button_meta' => 'wp-optimize',
 				'dismiss_time' => 'dismiss_season',
-				'discount_code' => 'newyearsale2019',
-				'valid_from' => '2018-12-26 00:00:00',
-				'valid_to' => '2019-01-14 23:59:59',
+				'discount_code' => 'newyearsale2020',
+				'valid_from' => '2019-12-26 00:00:00',
+				'valid_to' => '2020-01-14 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
+				'validity_function' => 'is_wpo_premium_installed',
 			),
 			'spring' => array(
 				'prefix' => '',
-				'title' => __('Spring sale - 20% off WP-Optimize Premium until April 30th', 'wpo-premium'),
-				'text' => __('To benefit, use this discount code:', 'wpo-premium').' ',
+				'title' => __('Spring sale - 20% off WP-Optimize Premium until April 30th', 'wp-optimize'),
+				'text' => __('To benefit, use this discount code:', 'wp-optimize').' ',
 				'image' => 'notices/spring.png',
 				'button_link' => 'https://getwpo.com',
-				'button_meta' => 'updraftplus',
+				'button_meta' => 'wp-optimize',
 				'dismiss_time' => 'dismiss_season',
-				'discount_code' => 'springsale2018',
+				'discount_code' => 'springsale2019',
 				'valid_from' => '2019-04-01 00:00:00',
 				'valid_to' => '2019-04-30 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
+				'validity_function' => 'is_wpo_premium_installed',
 			),
 			'summer' => array(
 				'prefix' => '',
@@ -205,10 +200,11 @@ class WP_Optimize_Notices extends Updraft_Notices_1_0 {
 				'button_link' => 'https://getwpo.com',
 				'button_meta' => 'wp-optimize',
 				'dismiss_time' => 'dismiss_season',
-				'discount_code' => 'summersale2018',
+				'discount_code' => 'summersale2019',
 				'valid_from' => '2019-07-01 00:00:00',
 				'valid_to' => '2019-07-31 23:59:59',
 				'supported_positions' => $this->dashboard_top_or_report,
+				'validity_function' => 'is_wpo_premium_installed',
 			)
 		);
 
@@ -223,8 +219,8 @@ class WP_Optimize_Notices extends Updraft_Notices_1_0 {
 		$this->initialized = true;
 		$this->notices_content = (defined('WP_OPTIMIZE_NOADS_B') && WP_OPTIMIZE_NOADS_B) ? array() : $this->populate_notices_content();
 		$our_version = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? WPO_VERSION.'.'.time() : WPO_VERSION;
-		$min_or_not = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '.min';
-		wp_enqueue_style('wp-optimize-notices-css',  WPO_PLUGIN_URL.'/css/wp-optimize-notices'.$min_or_not.'.css', array(), $our_version);
+		$min_or_not_internal = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '-'. str_replace('.', '-', WPO_VERSION). '.min';
+		wp_enqueue_style('wp-optimize-notices-css',  WPO_PLUGIN_URL.'/css/wp-optimize-notices'.$min_or_not_internal.'.css', array(), $our_version);
 	}
 
 	/**
@@ -246,17 +242,6 @@ class WP_Optimize_Notices extends Updraft_Notices_1_0 {
 	 * @return boolean                      a bool to indicate if the notice should be displayed or not
 	 */
 	protected function is_updraftcentral_installed($product = 'updraftcentral', $also_require_active = false) {
-		return parent::is_plugin_installed($product, $also_require_active);
-	}
-
-	/**
-	 * This method will call the parent is_plugin_installed and pass in the product keyy to check if that plugin is installed if it is then we shouldn't display the notice
-	 *
-	 * @param  string  $product             the plugin slug
-	 * @param  boolean $also_require_active a bool to indicate if the plugin should also be active
-	 * @return boolean                      a bool to indicate if the notice should be displayed or not
-	 */
-	protected function is_keyy_installed($product = 'keyy', $also_require_active = false) {
 		return parent::is_plugin_installed($product, $also_require_active);
 	}
 

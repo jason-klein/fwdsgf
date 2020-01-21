@@ -149,7 +149,7 @@ class WP_Optimizer {
 			return $optimization;
 		}
 
-		$this->change_time_limit();
+		WP_Optimize()->change_time_limit();
 
 		$optimization->init();
 	
@@ -191,7 +191,7 @@ class WP_Optimizer {
 		
 		if (is_wp_error($optimization)) return $optimization;
 
-		$this->change_time_limit();
+		WP_Optimize()->change_time_limit();
 
 		$optimization->before_get_info();
 
@@ -234,7 +234,7 @@ class WP_Optimizer {
 
 				if ('auto' == $which_option && empty($optimization->available_for_auto)) continue;
 
-				$this->change_time_limit();
+				WP_Optimize()->change_time_limit();
 
 				$results[$optimization_id] = $this->do_optimization($optimization);
 			}
@@ -261,19 +261,24 @@ class WP_Optimizer {
 	/**
 	 * Returns information about database tables.
 	 *
+	 * @param bool $update refresh or no cached data
+	 *
 	 * @return mixed
 	 */
-	public function get_tables() {
+	public function get_tables($update = false) {
 		static $tables_info = null;
 
-		if (null !== $tables_info) return $tables_info;
+		if (false === $update && null !== $tables_info) return $tables_info;
 
-		$table_status = WP_Optimize()->get_db_info()->get_show_table_status();
+		$table_status = WP_Optimize()->get_db_info()->get_show_table_status($update);
 
 		// Filter on the site's DB prefix (was not done in releases up to 1.9.1).
 		$table_prefix = $this->get_table_prefix();
 		
 		if (is_array($table_status)) {
+
+			$corrupted_tables_count = 0;
+
 			foreach ($table_status as $index => $table) {
 				$table_name = $table->Name;
 				
@@ -291,15 +296,14 @@ class WP_Optimizer {
 				$table_status[$index]->is_optimizable = WP_Optimize()->get_db_info()->is_table_optimizable($table_name);
 				$table_status[$index]->is_type_supported = WP_Optimize()->get_db_info()->is_table_type_optimize_supported($table_name);
 				// add information about corrupted tables.
-				$table_status[$index]->is_needing_repair = WP_Optimize()->get_db_info()->is_table_needing_repair($table_name);
-				// add information about using table by any of installed plugins.
-				$table_status[$index]->plugin   = WP_Optimize()->get_db_info()->get_table_plugin($table_name);
-				$table_status[$index]->is_using = WP_Optimize()->get_db_info()->is_table_using_by_plugin($table_name);
-				// if table belongs to any plugin then add plugins status.
-				if ($table_status[$index]->plugin) {
-					$table_status[$index]->plugin_status   = WP_Optimize()->get_db_info()->get_plugin_status($table_status[$index]->plugin);
-				}
+				$is_needing_repair = WP_Optimize()->get_db_info()->is_table_needing_repair($table_name);
+				$table_status[$index]->is_needing_repair = $is_needing_repair;
+				if ($is_needing_repair) $corrupted_tables_count++;
+
+				$table_status[$index] = $this->join_plugin_information($table_name, $table_status[$index]);
 			}
+
+			WP_Optimize()->get_options()->update_option('corrupted-tables-count', $corrupted_tables_count);
 		}
 
 		$tables_info = apply_filters('wp_optimize_get_tables', $table_status);
@@ -324,16 +328,58 @@ class WP_Optimizer {
 		$table->is_type_supported = $db_info->is_table_type_optimize_supported($table_name);
 		$table->is_needing_repair = $db_info->is_table_needing_repair($table_name);
 
-		// add information about using table by any of installed plugins.
-		$table->plugin   = $db_info->get_table_plugin($table_name);
-		$table->is_using = $db_info->is_table_using_by_plugin($table_name);
-		// if table belongs to any plugin then add plugins status.
-		if ($table->plugin) {
-			$table->plugin_status   = $db_info->get_plugin_status($table->plugin);
-		}
+		// add information about plugins.
+		$table = $this->join_plugin_information($table_name, $table);
 
 		$table = apply_filters('wp_optimize_get_table', $table);
 		return $table;
+	}
+
+	/**
+	 * Add information about relationship database tables with plugins.
+	 *
+	 * @param {string} $table_name
+	 * @param {object} $table_obj
+	 *
+	 * @return {object}
+	 */
+	public function join_plugin_information($table_name, $table_obj) {
+		// set can be removed flag.
+		$can_be_removed = false;
+		// set WP core table flag.
+		$wp_core_table = false;
+		// add information about using table by any of installed plugins.
+		$table_obj->is_using = WP_Optimize()->get_db_info()->is_table_using_by_plugin($table_name);
+		// if table belongs to any plugin then add plugins status.
+		$plugins = WP_Optimize()->get_db_info()->get_table_plugin($table_name);
+
+		if (false !== $plugins) {
+			// if belongs to any of plugin then we can remove table if plugin not active.
+			$can_be_removed = true;
+
+			$plugin_status = array();
+			foreach ($plugins as $plugin) {
+				$status = WP_Optimize()->get_db_info()->get_plugin_status($plugin);
+
+				if (__('WordPress core', 'wp-optimize') == $plugin) $wp_core_table = true;
+				// if plugin is active then we can't remove.
+				if ($wp_core_table || $status['active']) $can_be_removed = false;
+
+				if ($status['installed'] || $status['active'] || !$table_obj->is_using) {
+					$plugin_status[] = array(
+						'plugin' => $plugin,
+						'status' => $status,
+					);
+				}
+			}
+
+			$table_obj->plugin_status = $plugin_status;
+		}
+
+		$table_obj->wp_core_table = $wp_core_table;
+		$table_obj->can_be_removed = $can_be_removed;
+
+		return $table_obj;
 	}
 
 	/**
@@ -490,16 +536,5 @@ class WP_Optimizer {
 		}
 		
 		return array('output' => $output);
-	}
-
-	/**
-	 * Try to change PHP script time limit.
-	 */
-	private function change_time_limit() {
-		$time_limit = (defined('WP_OPTIMIZE_SET_TIME_LIMIT') && WP_OPTIMIZE_SET_TIME_LIMIT > 15) ? WP_OPTIMIZE_SET_TIME_LIMIT : 1800;
-
-		// Try to reduce the chances of PHP self-terminating via reaching max_execution_time.
-		// @codingStandardsIgnoreLine
-		@set_time_limit($time_limit);
 	}
 }

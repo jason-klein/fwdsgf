@@ -8,7 +8,6 @@ class WP_Optimize_Database_Information {
 	const MARIA_DB = 'MariaDB';
 	const PERCONA_DB = 'Percona';
 	// for some reason coding standard parser give error here WordPress.DB.RestrictedFunctions.mysql_mysql_db
-	// @codingStandardsIgnoreLine
 	const MYSQL_DB = 'MysqlDB';
 
 	const MYISAM_ENGINE = 'MyISAM';
@@ -94,16 +93,10 @@ class WP_Optimize_Database_Information {
 	 * @return bool|mixed
 	 */
 	public function get_table_status($table_name, $update = false) {
-		global $wpdb;
+		$tables_info = $this->get_show_table_status($update, $table_name);
 
-		if (false == $update) {
-			$tables_info = $this->get_show_table_status();
-
-			foreach ($tables_info as $table_info) {
-				if ($table_name == $table_info->Name) return $table_info;
-			}
-		} else {
-			return $wpdb->get_row($wpdb->prepare('SHOW TABLE STATUS LIKE %s;', $table_name));
+		foreach ($tables_info as $table_info) {
+			if ($table_name == $table_info->Name) return $table_info;
 		}
 
 		return false;
@@ -112,14 +105,24 @@ class WP_Optimize_Database_Information {
 	/**
 	 * Returns result for query SHOW TABLE STATUS.
 	 *
+	 * @param bool $update refresh or no cached data
 	 * @return array
 	 */
-	public function get_show_table_status() {
+	public function get_show_table_status($update = false, $table_name = '') {
 		global $wpdb;
 		static $tables_info = array();
+		static $fetched_all_tables = false;
 
-		if (empty($tables_info) || !is_array($tables_info)) {
-			$tables_info = $wpdb->get_results('SHOW TABLE STATUS');
+		// If a table name is provided, and the whole record hasn't been fetched yet, only fetch the information for the current table.
+		// This allows for a big preformance gain when using WP-CLI or doing single optimizations.
+		if ($table_name && !$fetched_all_tables) {
+			$sql = $wpdb->prepare("SHOW TABLE STATUS LIKE '%s'", $table_name);
+			$tables_info = $wpdb->get_results($sql);
+		} else {
+			if ($update || empty($tables_info) || !is_array($tables_info) || !$fetched_all_tables) {
+				$tables_info = $wpdb->get_results('SHOW TABLE STATUS');
+				$fetched_all_tables = true;
+			}
 		}
 
 		// If option innodb_file_per_table is disabled then Data_free column will have summary overhead value for all table.
@@ -386,6 +389,8 @@ class WP_Optimize_Database_Information {
 	public function is_table_needing_repair($table_name) {
 		$table_statuses = $this->check_all_tables();
 
+		if (!$this->is_table_type_repair_supported($table_name)) return false;
+
 		if (is_array($table_statuses) && array_key_exists($table_name, $table_statuses) && $table_statuses[$table_name]['corrupted']) {
 			return true;
 		} else {
@@ -400,23 +405,25 @@ class WP_Optimize_Database_Information {
 	 * @return bool
 	 */
 	public function is_table_using_by_plugin($table) {
-		$plugin_name = $this->get_table_plugin($table);
+		$plugin_names = $this->get_table_plugin($table);
 
 		// if we can't determine which plugin use $table then return true.
-		if (false == $plugin_name) {
+		if (false == $plugin_names) {
 			return true;
 		}
 
 		// is WordPress core table or using by any of installed plugins then return true.
-		if (__('WordPress core', 'wp-optimize') == $plugin_name || in_array($plugin_name, $this->get_all_installed_plugins())) {
-			return true;
+		foreach ($plugin_names as $plugin_name) {
+			if (__('WordPress core', 'wp-optimize') == $plugin_name || in_array($plugin_name, $this->get_all_installed_plugins())) {
+				return true;
+			}
 		}
 
 		return false;
 	}
 
 	/**
-	 * Get information about relations between tables and plugins. [ 'table' => 'plugin', ... ].
+	 * Get information about relations between tables and plugins. [ 'table' => ['plugin1', 'plugin2', ...], ... ].
 	 *
 	 * @return array
 	 */
@@ -425,13 +432,15 @@ class WP_Optimize_Database_Information {
 
 		$wp_core_tables = array(
 			'blogs',
-			'blogversions',
+			'blog_versions',
 			'commentmeta',
 			'comments',
 			'links',
 			'options',
 			'postmeta',
 			'posts',
+			'registration_log',
+			'signups',
 			'term_relationships',
 			'term_taxonomy',
 			'termmeta',
@@ -453,12 +462,12 @@ class WP_Optimize_Database_Information {
 		}
 
 		foreach ($wp_core_tables as $table) {
-			$plugin_tables[$table] = __('WordPress core', 'wp-optimize');
+			$plugin_tables[$table][] = __('WordPress core', 'wp-optimize');
 		}
 
 		// add WP-Optimize tables.
-		$plugin_tables['tm_taskmeta'] = 'wp-optimize';
-		$plugin_tables['tm_tasks'] = 'wp-optimize';
+		$plugin_tables['tm_taskmeta'][] = 'wp-optimize';
+		$plugin_tables['tm_tasks'][] = 'wp-optimize';
 
 		return $plugin_tables;
 	}
@@ -467,7 +476,7 @@ class WP_Optimize_Database_Information {
 	 * Try to get plugin name by table name and return it or return false if plugin is not defined.
 	 *
 	 * @param string $table
-	 * @return string|bool
+	 * @return array|bool - array with plugin slugs or false.
 	 */
 	public function get_table_plugin($table) {
 		global $wpdb;

@@ -167,7 +167,7 @@ class WP_Optimize_Commands {
 	public function save_site_settings($data) {
 		return $this->options->save_wpo_sites_option($data['wpo-sites']);
 	}
-	
+
 	/**
 	 * Perform the requested optimization
 	 *
@@ -187,6 +187,7 @@ class WP_Optimize_Commands {
 		} else {
 			$optimization_id = $params['optimization_id'];
 			$data = isset($params['data']) ? $params['data'] : array();
+			$include_ui_elements = isset($data['include_ui_elements']) ? $data['include_ui_elements'] : false;
 			
 			$optimization = $this->optimizer->get_optimization($optimization_id, $data);
 	
@@ -196,14 +197,17 @@ class WP_Optimize_Commands {
 				'result' => $result,
 				'messages' => array(),
 				'errors' => array(),
-				'status_box_contents' => $this->get_status_box_contents()
 			);
+
+			if ($include_ui_elements) {
+				$results['status_box_contents'] = $this->get_status_box_contents();
+			}
 			
 			if (is_wp_error($optimization)) {
 				$results['errors'][] = $optimization->get_error_message().' ('.$optimization->get_error_code().')';
 			}
 			
-			if ($optimization->get_changes_table_data()) {
+			if ($include_ui_elements && $optimization->get_changes_table_data()) {
 				$table_list = $this->get_table_list();
 				$results['table_list'] = $table_list['table_list'];
 				$results['total_size'] = $table_list['total_size'];
@@ -273,6 +277,7 @@ class WP_Optimize_Commands {
 		} else {
 			$optimization_id = $params['optimization_id'];
 			$data = isset($params['data']) ? $params['data'] : array();
+			$include_ui_elements = isset($data['include_ui_elements']) ? $data['include_ui_elements'] : false;
 
 			$optimization = $this->optimizer->get_optimization($optimization_id, $data);
 			$result = is_a($optimization, 'WP_Optimization') ? $optimization->get_optimization_info() : null;
@@ -281,8 +286,11 @@ class WP_Optimize_Commands {
 				'result' => $result,
 				'messages' => array(),
 				'errors' => array(),
-				'status_box_contents' => $this->get_status_box_contents()
 			);
+
+			if ($include_ui_elements) {
+				$results['status_box_contents'] = $this->get_status_box_contents();
+			}
 		}
 
 		return $results;
@@ -378,15 +386,14 @@ class WP_Optimize_Commands {
 		return WP_Optimize()->get_gzip_compression()->enable_gzip_command_handler($params);
 	}
 
-
 	/**
-	 * Enable or disable browser cache.
+	 * Get the current gzip compression status
 	 *
-	 * @param array $params - ['browser_cache_expire' => '1 month 15 days 2 hours' || '' - for disable cache]
 	 * @return array
 	 */
-	public function enable_browser_cache($params) {
-		return WP_Optimize()->get_browser_cache()->enable_browser_cache_command_handler($params);
+	public function get_gzip_compression_status() {
+		$status = WP_Optimize()->get_gzip_compression()->is_gzip_compression_enabled(true);
+		return is_wp_error($status) ? array('error' => __('We could not determine if Gzip compression is enabled.', 'wp-optimize'), 'code' => $status->get_error_code(), 'message' => $status->get_error_message()) : array('status' => $status);
 	}
 
 	/**
@@ -406,11 +413,27 @@ class WP_Optimize_Commands {
 		$settings = json_decode($params['settings'], true);
 
 		// check if valid json file posted (requires PHP 5.3+)
-		// @codingStandardsIgnoreLine
 		if ((function_exists('json_last_error') && 0 != json_last_error()) || empty($settings)) {
 			return array('errors' => array(__('Please upload a valid settings file.', 'wp-optimize')));
 		}
 
 		return WP_Optimize()->get_options()->save_settings($settings);
+	}
+
+	/**
+	 * Dismiss install or updated notice
+	 *
+	 * @return mixed
+	 */
+	public function dismiss_install_or_update_notice() {
+		if (!is_a(WP_Optimize()->install_or_update_notice, 'WP_Optimize_Install_Or_Update_Notice') || !is_callable(array(WP_Optimize()->install_or_update_notice, 'dismiss'))) {
+			return array('errors' => array('The notice could not be dismissed. The method "dismiss" on the object instance "install_or_update_notice" does not seem to exist.'));
+		}
+
+		if (!WP_Optimize()->install_or_update_notice->dismiss()) {
+			return array('errors' => array('The notice could not be dismissed. The settings could not be updated'));
+		}
+
+		return true;
 	}
 }

@@ -14,7 +14,7 @@
 	<?php
 	$sqlversion = (string) $wp_optimize->get_db_info()->get_version();
 
-	echo '<p class="wpo-system-status wpo-text__dim"><em>WP-Optimize '.WPO_VERSION.' - '.__('running on:', 'wp-optimize').' PHP '.htmlspecialchars(PHP_VERSION).', '.__('MySQL', 'wp-optimize').' '.htmlspecialchars($sqlversion).' - '.htmlspecialchars(PHP_OS).'</em></p>';
+	echo '<p class="wpo-system-status"><em>WP-Optimize '.WPO_VERSION.' - '.__('running on:', 'wp-optimize').' PHP '.htmlspecialchars(PHP_VERSION).', '.__('MySQL', 'wp-optimize').' '.htmlspecialchars($sqlversion).' - '.htmlspecialchars(PHP_OS).'</em></p>';
 
 	echo '<p>';
 	$lastopt = $options->get_option('last-optimized', 'Never');
@@ -131,7 +131,7 @@
 	?>
 	<p>
 		<span style="color: #E07575;"><?php printf(_n('Your database has %s corrupted table.', 'Your database has %s corrupted tables.', $corrupted_tables_count, 'wp-optimize'), $corrupted_tables_count); ?></span><br>
-		<a href="<?php esc_attr($admin_page_url); ?>?page=WP-Optimize&tab=wp_optimize_tables" onclick="jQuery('#wp-optimize-nav-tab-tables').trigger('click'); return false;"><?php _e('Repair corrupted tables here.', 'wp-optimize'); ?></a>
+		<a href="<?php echo esc_attr($admin_page_url); ?>&tab=wp_optimize_tables" onclick="jQuery('.wpo-pages-menu > a').first().trigger('click'); jQuery('#wp-optimize-nav-tab-wpo_database-tables').trigger('click'); return false;"><?php _e('Repair corrupted tables here.', 'wp-optimize'); ?></a>
 	</p>
 	<?php } ?>
 </div>
