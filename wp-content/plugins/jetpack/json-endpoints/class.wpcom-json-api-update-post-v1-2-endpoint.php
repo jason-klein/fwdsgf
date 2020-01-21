@@ -530,7 +530,7 @@ class WPCOM_JSON_API_Update_Post_v1_2_Endpoint extends WPCOM_JSON_API_Update_Pos
 			$insert['ID'] = $post->ID;
 
 			// wp_update_post ignores date unless edit_date is set
-			// See: http://codex.wordpress.org/Function_Reference/wp_update_post#Scheduling_posts
+			// See: https://codex.wordpress.org/Function_Reference/wp_update_post#Scheduling_posts
 			// See: https://core.trac.wordpress.org/browser/tags/3.9.2/src/wp-includes/post.php#L3302
 			if ( isset( $input['date_gmt'] ) || isset( $input['date'] ) ) {
 				$insert['edit_date'] = true;
@@ -586,7 +586,7 @@ class WPCOM_JSON_API_Update_Post_v1_2_Endpoint extends WPCOM_JSON_API_Update_Pos
 		if ( $new ) {
 			if ( $sitewide_likes_enabled ) {
 				if ( false === $likes ) {
-					update_post_meta( $post_id, 'switch_like_status', 1 );
+					update_post_meta( $post_id, 'switch_like_status', 0 );
 				} else {
 					delete_post_meta( $post_id, 'switch_like_status' );
 				}
@@ -601,7 +601,7 @@ class WPCOM_JSON_API_Update_Post_v1_2_Endpoint extends WPCOM_JSON_API_Update_Pos
 			if ( isset( $likes ) ) {
 				if ( $sitewide_likes_enabled ) {
 					if ( false === $likes ) {
-						update_post_meta( $post_id, 'switch_like_status', 1 );
+						update_post_meta( $post_id, 'switch_like_status', 0 );
 					} else {
 						delete_post_meta( $post_id, 'switch_like_status' );
 					}
