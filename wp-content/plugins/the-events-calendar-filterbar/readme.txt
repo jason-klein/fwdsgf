@@ -4,10 +4,8 @@ Contributors: ModernTribe, barry.hughes, bordoni, borkweb, brianjessee, brook-tr
 Tags: events, calendar, event, venue, organizer, dates, date, google maps, conference, workshop, concert, meeting, seminar, summit, class, modern tribe, tribe, widget, pro, filters, categories, sort, tags, taxonomy, find, search
 Donate link: http://m.tri.be/29
 Requires at least: 4.5
-Tested up to: 4.9.8
-Stable tag: 4.6
-Tested up to: 5.0.3
-Stable tag: 4.6
+Tested up to: 5.1.1
+Stable tag: 4.8.1
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -196,6 +194,41 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/18h9" target="_blank">The Events Calendar: iCal Importer</a>
 
 == Changelog ==
+
+= [4.8.1] 2019-05-02 =
+
+* Fix - The active filters from not showing text with the checkbox type [126126]
+
+= [4.8] 2019-04-17 =
+
+* Feature - Refactor the Database Connection to start using an Object Relational Mapping tool for a better tested codebase
+* Feature - Add the `tribe_events()` function as entry-point to the Events ORM and the supporting filter code [116356, 115579]
+* Feature - Add the `tribe_venues()` function as entry-point to the Venues ORM and the supporting filter code [116356, 115579]
+* Feature - Add the `tribe_organizers()` function as entry-point to the Organizers ORM and the supporting filter code [116356, 115579]
+* Fix - Confirm the "Collapse filters" function works in mobile view [124034]
+* Fix - Add the `active` class to filters that have values only [124034]
+* Fix - Prevent horizontal filters from taking the whole screen on mobile [124034]
+* Language - 0 new strings added, 29 updated, 0 fuzzied, and 0 obsoleted
+
+= [4.7.0.1] 2019-04-08 =
+
+* Security - Ensure filter values are properly escaped before use in queries [125513]
+
+= [4.7] 2019-03-04 =
+
+* Tweak - General improvements to the plugin code in order to make it more accessible [120758]
+* Tweak - Improved accessibility by removing duplicate IDs [120758]
+* Tweak - Grouped checkboxes together with a common aria label [120758]
+* Tweak - Added descriptive text to anchor tags [120758]
+* Tweak - Removed empty anchor tag from checkboxes markup [120758]
+* Tweak - Changed Filter Sections to be tabbed and open/closed with the keyboard [120758]
+* Tweak - Changing focus states of elements that did not have them [120758]
+* Tweak - Improved the design for the horizontal view bar [120758]
+* Tweak - Improved dropdown arrows positioning to their correct place [120758]
+* Tweak - Made the submit button visible in order to make it accessible [120758]
+* Tweak - Added a notice on the "Enable live refresh" setting, letting people know that if they use it it will affect accessibility [120758]
+* Tweak - Improved the JS for Filter Reset button that had an ID change [120758]
+* Language - 4 new strings added, 34 updated, 0 fuzzied, and 0 obsoleted
 
 = [4.6] 2019-02-05 =
 

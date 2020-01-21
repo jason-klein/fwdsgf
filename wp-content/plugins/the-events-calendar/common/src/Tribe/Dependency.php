@@ -4,7 +4,7 @@ defined( 'WPINC' ) or die;
 
 if ( ! class_exists( 'Tribe__Dependency' ) ) {
 	/**
-	 * Tracks which tribe plugins are currently activated
+	 * Tracks which Tribe (or related) plugins are registered, activated, or requirements satisfied.
 	 */
 	class Tribe__Dependency {
 
@@ -17,7 +17,7 @@ if ( ! class_exists( 'Tribe__Dependency' ) ) {
 		 *  'path'    => 'Path to the main plugin/bootstrap file' (optional)
 		 * )
 		 */
-		protected $active_plugins = array();
+		protected $active_plugins = [];
 
 		/**
 		 * A multidimensional array of active tribe plugins in the following format
@@ -29,7 +29,7 @@ if ( ! class_exists( 'Tribe__Dependency' ) ) {
 		 *  'dependencies'      => 'A multidimensional of dependencies' (optional)
 		 * )
 		 */
-		protected $registered_plugins = array();
+		protected $registered_plugins = [];
 
 		/**
 		 * An array of class Tribe__Admin__Notice__Plugin_Download per plugin
@@ -37,40 +37,19 @@ if ( ! class_exists( 'Tribe__Dependency' ) ) {
 		 * @since 4.9
 		 *
 		 */
-		protected $admin_messages = array();
-
-		/**
-		 * Static Singleton Holder
-		 *
-		 * @var self
-		 */
-		private static $instance;
-
-
-		/**
-		 * Static Singleton Factory Method
-		 *
-		 * @return self
-		 */
-		public static function instance() {
-			if ( ! self::$instance ) {
-				self::$instance = new self;
-			}
-			return self::$instance;
-		}
+		protected $admin_messages = [];
 
 		/**
 		 * Adds a plugin to the active list
 		 *
 		 * @since 4.9
 		 *
-		 * @param string        $main_class    Main/base class for this plugin
-		 * @param null|string   $version       Version number of plugin
-		 * @param null|string   $path          Path to the main plugin/bootstrap file
-		 * @param array         $dependencies  An array of dependencies for a plugin
+		 * @param string      $main_class   Main/base class for this plugin
+		 * @param null|string $version      Version number of plugin
+		 * @param null|string $path         Path to the main plugin/bootstrap file
+		 * @param array       $dependencies An array of dependencies for a plugin
 		 */
 		public function add_registered_plugin( $main_class, $version = null, $path = null, $dependencies = array() ) {
-
 			$plugin = array(
 				'class'        => $main_class,
 				'version'      => $version,
@@ -83,7 +62,6 @@ if ( ! class_exists( 'Tribe__Dependency' ) ) {
 			if ( $path ) {
 				$this->admin_messages[ $main_class ] = new Tribe__Admin__Notice__Plugin_Download( $path );
 			}
-
 		}
 
 		/**
@@ -105,7 +83,6 @@ if ( ! class_exists( 'Tribe__Dependency' ) ) {
 		 * @param string $path       Path to the main plugin/bootstrap file
 		 */
 		public function add_active_plugin( $main_class, $version = null, $path = null ) {
-
 			$plugin = array(
 				'class'        => $main_class,
 				'version'      => $version,
@@ -251,7 +228,6 @@ if ( ! class_exists( 'Tribe__Dependency' ) ) {
 		 * @return bool
 		 */
 		public function is_plugin_version( $main_class, $version, $compare = '>=' ) {
-
 			//active plugin check to see if the correct version is active
 			if ( ! $this->is_plugin_active( $main_class ) ) {
 				return false;
@@ -274,7 +250,6 @@ if ( ! class_exists( 'Tribe__Dependency' ) ) {
 		 * @return bool
 		 */
 		public function is_plugin_version_registered( $main_class, $version, $compare = '>=' ) {
-
 			//registered plugin check if addon as it tests if it might load
 			if ( ! $this->is_plugin_registered( $main_class ) ) {
 				return false;
@@ -293,7 +268,6 @@ if ( ! class_exists( 'Tribe__Dependency' ) ) {
 		 * @return bool
 		 */
 		public function has_requisite_plugins( $plugins_required = array() ) {
-
 			foreach ( $plugins_required as $class => $version ) {
 				// Return false if the plugin is not set or is a lesser version
 				if ( ! $this->is_plugin_active( $class ) ) {
@@ -322,9 +296,8 @@ if ( ! class_exists( 'Tribe__Dependency' ) ) {
 		}
 
 		/**
-		 * Gets all dependencies or single class requirements
-		 * if parent, co, add does not exist use array as is
-		 * if they do exist check each one in turn
+		 * Gets all dependencies or single class requirements if parent, co, add does not exist use array as is if they
+		 * do exist check each one in turn.
 		 *
 		 * @since 4.9
 		 *
@@ -335,18 +308,18 @@ if ( ! class_exists( 'Tribe__Dependency' ) ) {
 		 * @return bool  returns false if any dependency is invalid
 		 */
 		public function has_valid_dependencies( $plugin, $dependencies = array(), $addon = false ) {
-
 			if ( empty( $dependencies ) ) {
 				return true;
 			}
 
 			$failed_dependency = 0;
-			$tribe_plugins    = new Tribe__Plugins();
+
+			$tribe_plugins = new Tribe__Plugins();
 
 			foreach ( $dependencies as $class => $version ) {
 
 				// if no class for add-on
-				$checked_plugin    = $this->get_registered_plugin( $class );
+				$checked_plugin = $this->get_registered_plugin( $class );
 				if ( $addon && empty( $checked_plugin ) ) {
 					continue;
 				}
@@ -357,11 +330,78 @@ if ( ! class_exists( 'Tribe__Dependency' ) ) {
 				}
 
 				$dependent_plugin = $tribe_plugins->get_plugin_by_class( $class );
-				$this->admin_messages[ $plugin['class'] ]->add_required_plugin( $dependent_plugin['short_name'], $dependent_plugin['thickbox_url'], $is_registered, $version, $addon );
+
+				$pue = $this->get_pue_from_class( $dependent_plugin['class'] );
+				$has_pue_notice = $pue ? tribe( 'pue.notices' )->has_notice( $pue->pue_install_key ) : false;
+
+				$this->admin_messages[ $plugin['class'] ]->add_required_plugin(
+					$dependent_plugin['short_name'],
+					$dependent_plugin['thickbox_url'],
+					$is_registered,
+					$version,
+					$addon,
+					$has_pue_notice
+				);
 				$failed_dependency++;
 			}
 
 			return $failed_dependency;
+		}
+
+		/**
+		 * Gets the Tribe__PUE__Checker instance of a given plugin based on the class.
+		 *
+		 * @since  4.9.12
+		 *
+		 * @param  string $class Which plugin main class we are looking for.
+		 *
+		 * @return Tribe__PUE__Checker
+		 */
+		public function get_pue_from_class( $class ) {
+			if ( ! is_string( $class ) ) {
+				return false;
+			}
+
+			// If class doesnt exist the plugin doesnt exist.
+			if ( ! class_exists( $class ) ) {
+				return false;
+			}
+
+			/**
+			 * These callbacks are only required to prevent fatals.
+			 * Only happen for plugin that use PUE.
+			 */
+			$callback_map = [
+				'Tribe__Events__Pro__Main' => function() {
+					$pue_reflection = new ReflectionClass( Tribe__Events__Pro__PUE::class );
+					$values = $pue_reflection->getStaticProperties();
+					$values['plugin_file'] = EVENTS_CALENDAR_PRO_FILE;
+					return $values;
+				},
+				'Tribe__Events__Filterbar__View' => function() {
+					$pue_reflection = new ReflectionClass( Tribe__Events__Filterbar__PUE::class );
+					$values = $pue_reflection->getStaticProperties();
+					$values['plugin_file'] = TRIBE_EVENTS_FILTERBAR_FILE;
+					return $values;
+				},
+				'Tribe__Events__Tickets__Eventbrite__Main' => function() {
+					$pue_reflection = new ReflectionClass( Tribe__Events__Tickets__Eventbrite__PUE::class );
+					$values = $pue_reflection->getStaticProperties();
+					$values['plugin_file'] = EVENTBRITE_PLUGIN_FILE;
+					return $values;
+				},
+			];
+
+			// Bail when class is not mapped.
+			if ( ! isset( $callback_map[ $class ] ) ) {
+				return false;
+			}
+
+			// Use the callback to get the returns without fatals
+			$values = $callback_map[ $class ]();
+			$pue_instance = new Tribe__PUE__Checker( $values['update_url'], $values['pue_slug'], [], plugin_basename( $values['plugin_file'] ) );
+
+			return $pue_instance;
 		}
 
 		/**
@@ -406,9 +446,20 @@ if ( ! class_exists( 'Tribe__Dependency' ) ) {
 			if ( ! empty( $classes_req ) && ! $this->has_requisite_plugins( $classes_req ) ) {
 				$tribe_plugins = new Tribe__Plugins();
 				foreach ( $classes_req as $class => $plugin_version ) {
-					$plugin    = $tribe_plugins->get_plugin_by_class( $class );
-					$is_active = $this->is_plugin_version( $class, $plugin_version );
-					$this->admin_messages[ $main_class ]->add_required_plugin( $plugin['short_name'], $plugin['thickbox_url'], $is_active, $plugin_version );
+					$plugin         = $tribe_plugins->get_plugin_by_class( $class );
+
+					$is_active      = $this->is_plugin_version( $class, $plugin_version );
+					$pue            = $this->get_pue_from_class( $plugin['class'] );
+					$has_pue_notice = $pue ? tribe( 'pue.notices' )->has_notice( $pue->pue_install_key ) : false;
+
+					$this->admin_messages[ $main_class ]->add_required_plugin(
+						$plugin['short_name'],
+						$plugin['thickbox_url'],
+						$is_active,
+						$plugin_version,
+						false,
+						$has_pue_notice
+					);
 				}
 			}
 
@@ -462,7 +513,6 @@ if ( ! class_exists( 'Tribe__Dependency' ) ) {
 			}
 
 			return false;
-
 		}
 
 		/**
@@ -489,6 +539,16 @@ if ( ! class_exists( 'Tribe__Dependency' ) ) {
 			return $addon_dependencies;
 		}
 
+		/**
+		 * Static Singleton Factory Method
+		 *
+		 * @deprecated  4.9.12  We shouldn't be handling singletons internally.
+		 *
+		 * @return self
+		 */
+		public static function instance() {
+			return tribe( self::class );
+		}
 	}
 
 }

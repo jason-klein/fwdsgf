@@ -1,11 +1,11 @@
 === The Events Calendar PRO ===
 
-Contributors: ModernTribe, barry.hughes, bordoni, borkweb, brianjessee, brook-tribe, faction23, geoffgraham, ggwicz, jazbek, jbrinley, joshlimecuda, leahkoerper, lucatume, mastromktg, mat-lipe, mdbitz, neillmcshea, nicosantos, peterchester, reid.peifer, roblagatta, ryancurban, shane.pearlman, thatdudebutch,  zbtirrell
+Contributors: ModernTribe, barry.hughes, bordoni, borkweb, brianjessee, brook-tribe, faction23, geoffgraham, ggwicz, jazbek, jbrinley, joshlimecuda, leahkoerper, lucatume, mastromktg, mat-lipe, mdbitz, neillmcshea, nicosantos, peterchester, reid.peifer, roblagatta, ryancurban, shane.pearlman, thatdudebutch,  zbtirrell, juanfra
 Tags: events, calendar, event, venue, organizer, dates, date, google maps, conference, workshop, concert, meeting, seminar, summit, class, modern tribe, tribe, widget, pro
 Donate link: http://m.tri.be/29
 Requires at least: 4.7
-Tested up to: 5.0.3
-Stable tag: 4.6.1
+Tested up to: 5.3
+Stable tag: 4.7.10
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -204,6 +204,96 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/fa" target="_blank">The Events Calendar: Filter Bar</a>
 
 == Changelog ==
+
+= [4.7.10] 2019-11-20 =
+
+* Tweak - Remove any usage of the function `date_default_timezone_set` after WordPress 5.3 discouraged the usage across any plugins or themes. [137420]
+* Language - 0 new strings added, 4 updated, 0 fuzzied, and 0 obsoleted
+
+= [4.7.9] 2019-11-12 =
+
+* Fix - Resolved issue where non YYYY-MM-DD datepicker formats resulted in unpredictable behavior while navigating views [116086, 126472, 117909]
+* Tweak - added the `tribe_events_pro_geocode_rewrite_rules` filter to allow filtering the rewrite rules generated for the Map View [135387]
+* Tweak - Reduced the frequency of checking for venues that need geolocation to improve performance in the Dashboard [137047]\
+* Language - 12 new strings added, 89 updated, 1 fuzzied, and 6 obsoleted
+
+= [4.7.8.1] 2019-09-26 =
+
+* Fix - Geolocalization venue fixer no longer 5xx on Hosts with Join SQL limitations [134742]
+* Fix - SQL queries sped up to prevent 5xx when too many venues are present on Geolocatization venue fixer [134742]
+
+= [4.7.8] 2019-09-25 =
+
+* Fix - Geolocalization from "Fix venues data" on the Settings page does a more thorough selection of missing geocoordinates.
+* Fix - Issues with Fix Venue Geolocation functionality that could result in no fixes being done or unclear communication [127876]
+* Tweak - Do not show the "Fix Venues" button when using the default Google Maps API key [127876]
+* Language - 3 new strings added, 35 updated, 0 fuzzied, and 0 obsoleted
+
+= [4.7.7] 2019-09-04 =
+
+* Fix - 'Fix venues data' button on Settings page will now NOT show if no venue data needs to be fixed [128589]
+* Language - 5 new strings added, 23 updated, 0 fuzzied, and 0 obsoleted
+
+= [4.7.6] 2019-08-19 =
+
+* Tweak - Updates to the shortcode Javascript code to allow disabling the URL manipulation behavior via the 'tribe_events_js_config' filter [132567]
+* Language - 6 new strings added, 9 updated, 0 fuzzied, and 0 obsoleted
+
+= [4.7.5] 2019-07-25 =
+
+* Fix - Featured event AJAX and browser navigation working as expected for all use cases. [127272]
+* Fix - Shortcode properly handling featured param on AJAX requests. [114002]
+* Language - 8 new strings added, 59 updated, 0 fuzzied, and 0 obsoleted
+
+= [4.7.4] 2019-07-03 =
+
+* Tweak - Fixed issue where WPML integration sometimes threw a fatal while manipulating recurring events
+* TWeak - Add `GEO` and `X-APPLE-STRUCTURED-LOCATION` information to `.ics` files [89999]
+* Fix - Adding additional esc_html() calls to the Recurring Event tooltips [129566]
+* Language - 3 new strings added, 66 updated, 0 fuzzied, and 0 obsoleted
+
+= [4.7.3] 2019-06-06 =
+
+* Tweak - Reduced file size by removing .po files and directing anyone creating or editing local translations to translations.theeventscalendar.com
+
+= [4.7.2] 2019-05-16 =
+
+* Fix - Make sure Map view initial state is consistent no matter the API key used [126142]
+* Fix - Make sure latitude and longitude are correctly parsed in Map view [126623]
+
+= [4.7.1] 2019-05-02 =
+
+* Fix - Prevent Moment.js and Handlebars from loading on all admin pages [126254]
+* Fix - Prevent Handlebars conflict with Caldera Forms [126254]
+* Language - 0 new strings added, 4 updated, 0 fuzzied, and 0 obsoleted
+
+= [4.7.0.1] 2019-04-25 =
+
+* Security - Ensure filter values are properly escaped before use in queries [126314]
+* Fix - Modifications to `tribe_get_events()` to resolve problems introduced by latest release `4.7.0`
+* Fix - Photo view uses the start date as Now instead of the start of the day, which was leading into inconsistent navigation [126427]
+* Fix - Ensure proper order for Mini Calendar Widget. Thanks for reporting Hillary [126131]
+* Fix - Prevents past events from showing up on Related Events section. [126124]
+* Fix - Events displayed correctly on all views, using End date instead of Start Date. Making sure events that are not over still show on upcoming [126259]
+
+= [4.7.0] 2019-04-17 =
+
+* Feature - Refactor the Database Connection to start using an Object Relational Mapping tool for a better tested codebase
+* Feature - Add the `tribe_events()` function as entry-point to the Events ORM and the supporting filter code [116356, 115579]
+* Feature - Add the `tribe_venues()` function as entry-point to the Venues ORM and the supporting filter code [116356, 115579]
+* Feature - Add the `tribe_organizers()` function as entry-point to the Organizers ORM and the supporting filter code [116356, 115579]
+* Tweak - Make sure all venue geolocalization methods use the new Object Relational Mapping
+* Fix - Use WordPress date format for the recurring event tooltip. Thanks Markus for flagging this! [123051]
+* Language - 1 new strings added, 168 updated, 0 fuzzied, and 0 obsoleted
+
+= [4.6.2.1] 2019-03-28 =
+
+* Fix - Prevent fatal when not using Blocks Editor with Event Tickets and Events Calendar Pro active [124654]
+
+= [4.6.2] 2019-03-04 =
+
+* Fix - Prevent fatal happening on Widget Calendar Mini with Site Origin Page builder [122546]
+* Tweak - Update version of Handlebars.js dependency to version 3.0.6
 
 = [4.6.1] 2019-02-14 =
 
