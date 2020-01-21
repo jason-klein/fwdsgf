@@ -13,6 +13,10 @@ ical/php-simple-html-dom-parser/
 wp-content/plugins/events-calendar-pro/
 wp-content/plugins/the-events-calendar-filterbar/
 
+# Divi Theme
+wp-content/et-cache/
+wp-content/mu-plugins/et-safe-mode/SupportCenterSafeModeDisablePlugins.php
+wp-content/mu-plugins/SupportCenterMUAutoloader.php
 wp-content/plugins/divi-builder/
 wp-content/themes/Divi/
 
